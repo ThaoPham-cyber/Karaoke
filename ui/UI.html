@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phần mềm quản lý Karaoke</title>
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="file:/D:/VSCode/images/logo.png" alt="Logo">
+    </div>
+
+    <ul class="menu">
+      <li><button data-page="Service"><i class="fa-solid fa-shop"></i>Quản lý dịch vụ</button></li>
+      <li><button data-page="Customer"><i class="fa-solid fa-users"></i>Quản lý khách hàng</button></li>
+      <li><button data-page="Room"><i class="fa-solid fa-calendar-days"></i>Quản lý phòng</button></li>
+      <li><button data-page="Account"><i class="fa-solid fa-circle-user"></i>Quản lý tài khoản</button></li>
+      <li><button data-page="EmployeeFile"><i class="fa-solid fa-id-card"></i>Quản lý hồ sơ nhân viên</button></li>
+      <li><button data-page="Statistics"><i class="fa-solid fa-chart-simple"></i>Thống kê</button></li>
+      <li><button data-page="Exit"><i class="fa-solid fa-right-to-bracket"></i>Đăng xuất</button></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <div class="content" id="content">
+      <h2>HỆ THỐNG QUẢN LÝ QUÁN KARAOKE</h2>
+    </div>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.menu button');
+    const content = document.getElementById('content');
+    let currentCssLink = null;
+    let currentJsScript = null;
+
+    // Khi click menu bên trái
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const page = button.dataset.page;
+        buttons.forEach(b => b.classList.remove("active"));
+        button.classList.add("active");
+
+        // Khi bấm "Đăng xuất" hoặc trang chính
+        if (page === "Exit") {
+          content.innerHTML = "<h2>Đã đăng xuất!</h2>";
+          return;
+        }
+
+        const pagePath = `${page}/${page}.html`;
+        content.innerHTML = "<p>Đang tải nội dung...</p>";
+
+        // Xóa CSS, JS cũ nếu có
+        if (currentCssLink) currentCssLink.remove();
+        if (currentJsScript) currentJsScript.remove();
+
+        try {
+          // Lấy nội dung HTML từ Java (Bridge)
+          const html = window.Bridge.loadHtmlContent(pagePath);
+          content.innerHTML = html;
+
+          // Nạp CSS riêng của trang
+          const cssPath = `${page}/${page}.css`;
+          const cssLink = document.createElement("link");
+          cssLink.rel = "stylesheet";
+          cssLink.href = cssPath;
+          document.head.appendChild(cssLink);
+          currentCssLink = cssLink;
+
+          // Nạp JS riêng của trang (nếu có)
+          const jsPath = `${page}/${page}.js`;
+          const jsScript = document.createElement("script");
+          jsScript.src = jsPath;
+          jsScript.onload = () => console.log(`✅ ${page}.js loaded`);
+          jsScript.onerror = () => console.error(`❌ Không thể load ${page}.js`);
+          document.body.appendChild(jsScript);
+          currentJsScript = jsScript;
+        } catch (err) {
+          content.innerHTML = `<p style="color:red">Trang đang phát triển hoặc lỗi: ${err.message}</p>`;
+          console.error("Bridge error:", err);
+        }
+      });
+    });
+
+    // Hàm toàn cục: Dùng cho nút Quay lại trong Room.html
+    function backToHome() {
+      document.querySelectorAll('.menu button').forEach(b => b.classList.remove("active"));
+      content.innerHTML = "<h2>HỆ THỐNG QUẢN LÝ QUÁN KARAOKE</h2>";
+    }
+
+    window.backToHome = backToHome;
+  </script>
+</body>
+</html>

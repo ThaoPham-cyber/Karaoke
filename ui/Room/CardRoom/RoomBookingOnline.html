@@ -1,0 +1,31 @@
+<!-- ui/Room/CardRoom/RoomBookingOnline.html -->
+<div class="booking-online-wrap">
+  <h2>Quản lý đặt trước (Online)</h2>
+
+  <div class="booking-online-info">
+    <p><strong>Phòng:</strong> <span id="bo_roomName">---</span></p>
+    <p><strong>Trạng thái:</strong> <span id="bo_status">---</span></p>
+    <p class="small-note">Tại đây bạn có thể sửa đặt trước, hủy đặt, hoặc chuyển sang thanh toán khi khách đến.</p>
+  </div>
+
+  <div class="booking-online-form">
+    <label>Tên khách</label>
+    <input id="bo_customerName" type="text" placeholder="Tên khách..." />
+
+    <label>Số điện thoại</label>
+    <input id="bo_customerPhone" type="tel" placeholder="0xxxxxxxx" />
+
+    <label>Ngày giờ đến</label>
+    <input id="bo_startTime" type="datetime-local" />
+
+    <div class="actions">
+      <button id="bo_save" class="btn add">Lưu thay đổi</button>
+      <button id="bo_cancel" class="btn back">Hủy đặt</button>
+      <button id="bo_checkin" class="btn pay">Khách Đến (Check-in)</button>
+      <button id="bo_back" class="btn back">← Quay lại</button>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="RoomBookingOnline.css">
+<script src="RoomBookingOnline.js"></script>

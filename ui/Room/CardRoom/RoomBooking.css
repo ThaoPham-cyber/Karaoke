@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f9fc;
+    padding: 20px;
+}
+
+.booking-container, .detail-container {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h2, h3 {
+    color: #2b3e50;
+    text-align: center;
+}
+
+.action-bar {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+button {
+    background: #0078d7;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    margin: 3px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #005fa3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.order-form input {
+    margin: 5px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.actions {
+    margin-top: 15px;
+    text-align: center;
+}

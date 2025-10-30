@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý phòng</title>
+  <link rel="stylesheet" href="Room.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+  <div class="room-header">
+    <button class="back-btn" onclick="window.backToHome()">
+      <i class="fa-solid fa-arrow-left"></i> Quay lại
+    </button>
+    <h2>Quản lý phòng</h2>
+  </div>
+
+  <div class="room-container" id="roomContainer">
+    <div class="room-card normal">Phòng thường</div>
+    <div class="room-card vip">Phòng VIP</div>
+    <div class="room-card booked">Phòng đã được đặt</div>
+    <div class="room-card repair">Phòng đang sửa chữa</div>
+  </div>
+
+  <div class="add-room">
+    <button id="btnAddRoom">+ Thêm phòng</button>
+  </div>
+
+  <!-- Hộp thoại thêm phòng -->
+  <div id="addRoomDialog" class="dialog hidden">
+    <div class="dialog-content">
+      <h3>Thêm phòng mới</h3>
+      <label>Loại phòng:</label>
+      <select id="roomType">
+        <option value="normal">Phòng thường</option>
+        <option value="vip">Phòng VIP</option>
+        <option value="repair">Phòng đang sửa chữa</option>
+        <option value="booked">Phòng đã được đặt</option>
+      </select>
+      <div class="dialog-actions">
+        <button id="btnConfirmAdd">Thêm</button>
+        <button id="btnCancelAdd">Hủy</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="Room.js"></script>
+</body>
+</html>
