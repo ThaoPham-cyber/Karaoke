@@ -1,3 +1,48 @@
-<h2>💡 Trang Đặt Phòng Trực Tiếp (RoomBooking.html)</h2>
-<p>Đây là trang hiển thị khi nhấn vào phòng trống hoặc phòng VIP.</p>
-<button onclick="window.parent.backToHome()">⬅ Quay lại danh sách phòng</button>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý đặt phòng</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="RoomBooking.css">
+</head>
+<body>
+  <div class="booking-page-container">
+    
+      <button class="back-btn" onclick="window.backToRoomManagement()">
+        <i class="fa-solid fa-arrow-left"></i> Quay lại
+      </button>
+      <h2>Quản lý đặt phòng</h2>
+    </div>
+
+    <div class="booking-grid" id="bookingContainer"></div>
+    <div id="bookingDialog" class="dialog hidden">
+      <div class="dialog-content">
+        <div class="dialog-content">
+        <label>Tên khách hàng:</label>
+        <input type="text" id="customerNameInput">
+        <label>Số điện thoại:</label>
+        <input type="text" id="customerPhoneInput">
+        <label>Phòng:</label>
+        <select id="roomSelectForBooking"></select>
+        <label>Ngày đặt:</label>
+        <input type="date" id="bookingDateInput">
+        <label>Giờ bắt đầu:</label>
+        <input type="time" id="startTimeInput">
+        <label>Giờ kết thúc:</label>
+        <input type="time" id="endTimeInput">
+        <div class="dialog-actions">
+          <button id="btnConfirmBookingAction" class="primary-btn">Xác nhận</button>
+          <button id="btnCancelBookingDialog">Hủy</button>
+        </div>
+      </div>
+    </div>
+
+   
+      </div>
+    </div>
+  </div>
+
+  <script src="RoomBooking.js"></script>
+</body>
+</html>
