@@ -74,11 +74,11 @@
 
 /* --- MÀU SẮC TRẠNG THÁI --- */
 .room-card.normal {
-    background-color: #388e3c; /* Xanh lá cây */
+    background-color: #6ae370; /* Xanh lá cây */
 }
 
 .room-card.vip {
-    background-color: #fbc02d; /* Vàng */
+    background-color: #f9d578; /* Vàng */
     color: #333; 
 }
 .room-card.vip .room-name {

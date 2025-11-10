@@ -1,33 +1,3 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Chi Tiết Phòng</title>
-    <link rel="stylesheet" href="../Room/Room.css">
-    <link rel="stylesheet" href="RoomBooking.css">
-</head>
-<body>
-    <div class="detail-container">
-        <h2>Chi Tiết Phòng</h2>
-        <div id="roomInfo"></div>
-
-        <h3>Danh sách món gọi</h3>
-        <ul id="orderList"></ul>
-
-        <div class="order-form">
-            <input type="text" id="itemName" placeholder="Tên món...">
-            <input type="number" id="itemPrice" placeholder="Giá...">
-            <button id="btnAddItem">Thêm Món</button>
-        </div>
-
-        <h3>Tổng tiền: <span id="totalPrice">0</span> VNĐ</h3>
-
-        <div class="actions">
-            <button id="btnPay">💳 Thanh Toán</button>
-            <button id="btnBack">⬅️ Quay Lại</button>
-        </div>
-    </div>
-
-    <script src="RoomDetail.js"></script>
-</body>
-</html>
+<h2>🎤 Trang Chi Tiết Phòng (RoomDetail.html)</h2>
+<p>Phòng đang hoạt động - hiển thị thời gian hát, chi phí, khách hiện tại.</p>
+<button onclick="window.parent.backToHome()">⬅ Quay lại danh sách phòng</button>

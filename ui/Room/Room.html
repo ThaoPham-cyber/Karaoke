@@ -1,67 +1,63 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Quản lý phòng</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <title>Quản lý phòng</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="Room.css">
 </head>
 <body>
-  <div class="room-page-container">
-    <div class="room-header-toolbar">
-      <button class="back-btn" onclick="window.backToHome()">
-        <i class="fa-solid fa-arrow-left"></i> Quay lại
-      </button>
-      <h2>Quản lý phòng</h2>
-    </div>
+  <div class="room-page-container">
+    <div class="room-header-toolbar">
+      <button class="back-btn" onclick="window.backToHome()">
+        <i class="fa-solid fa-arrow-left"></i> Quay lại
+      </button>
+      <h2>Quản lý phòng</h2>
+    </div>
 
-            <div class="room-grid" id="roomContainer">
-          </div>
-    
-        <div class="room-actions">
-      <button id="btnAddRoom" class="action-btn primary-btn"><i class="fa-solid fa-plus"></i> Thêm phòng</button>
-      <button id="btnEditRoom" class="action-btn secondary-btn"><i class="fa-solid fa-pen"></i> Sửa phòng</button>
-      <button id="btnDeleteRoom" class="action-btn secondary-btn"><i class="fa-solid fa-trash"></i> Xóa phòng</button>
-    </div>
+    <div class="room-grid" id="roomContainer"></div>
 
-            <div id="roomDialog" class="dialog hidden">
-      <div class="dialog-content">
-                <h3 id="dialogTitle">Thêm phòng mới</h3>
+    <div class="room-actions">
+      <button id="btnAddRoom" class="action-btn primary-btn"><i class="fa-solid fa-plus"></i> Thêm phòng</button>
+      <button id="btnEditRoom" class="action-btn secondary-btn"><i class="fa-solid fa-pen"></i> Sửa phòng</button>
+      <button id="btnDeleteRoom" class="action-btn secondary-btn"><i class="fa-solid fa-trash"></i> Xóa phòng</button>
+    </div>
 
-        <label>Tên phòng (Ví dụ: Phòng 101):</label>
-                <input type="text" id="roomNameInput">
+    <!-- Hộp thoại thêm/sửa -->
+    <div id="roomDialog" class="dialog hidden">
+      <div class="dialog-content">
+        <h3 id="dialogTitle">Thêm phòng mới</h3>
+        <label>Tên phòng:</label>
+        <input type="text" id="roomNameInput">
+        <label>Loại phòng:</label>
+        <select id="roomType">
+          <option value="normal">Phòng Thường</option>
+          <option value="vip">Phòng VIP</option>
+          <option value="booked">Phòng Đặt trước</option>
+          <option value="repair">Phòng Sửa chữa</option>
+        </select>
+        <label>Giá (VNĐ/giờ):</label>
+        <input type="number" id="roomPriceInput" value="50000">
+        <div class="dialog-actions">
+          <button id="btnConfirmAction" class="primary-btn">Xác nhận</button>
+          <button id="btnCancelDialog">Hủy</button>
+        </div>
+      </div>
+    </div>
 
-        <label id="typeLabel">Loại phòng:</label>
-                <select id="roomType">
-          <option value="normal">Phòng Thường (Sẵn sàng)</option>
-          <option value="vip">Phòng VIP (Sẵn sàng)</option>
-          <option value="booked">Phòng Đặt trước</option>
-          <option value="repair">Phòng Sửa chữa</option>
-                  </select>
-        
-                <div id="roomPriceDiv">
-          <label>Giá phòng (VNĐ/giờ):</label>
-                    <input type="number" id="roomPriceInput" value="50000">
-        </div>
+    <!-- Hộp thoại chọn phòng để xóa/sửa -->
+    <div id="selectRoomDialog" class="dialog hidden">
+      <div class="dialog-content">
+        <h3 id="selectDialogTitle">Chọn phòng để thao tác</h3>
+        <select id="roomSelectToDeleteEdit"></select>
+        <div class="dialog-actions">
+          <button id="btnConfirmSelect" class="primary-btn">Tiếp tục</button>
+          <button id="btnCancelSelect">Hủy</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="dialog-actions">
-                    <button id="btnConfirmAction" class="primary-btn">Xác nhận</button>
-                    <button id="btnCancelDialog">Hủy</button>
-        </div>
-      </div>
-    </div>
-
-            <div id="selectRoomDialog" class="dialog hidden">
-      <div class="dialog-content">
-                <h3 id="selectDialogTitle">Chọn phòng để Xóa</h3>
-                <select id="roomSelectToDeleteEdit"></select>
-        <div class="dialog-actions">
-                    <button id="btnConfirmSelect" class="primary-btn">Tiếp tục</button>
-                    <button id="btnCancelSelect">Hủy</button>
-        </div>
-      </div>
-    </div>
-
-        <script src="Room.js"></script>
-  </div>
+  <script src="Room.js"></script>
 </body>
 </html>
