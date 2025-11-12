@@ -1,3 +1,74 @@
-<h2>🌐 Trang Đặt Phòng Online (RoomBookingOnline.html)</h2>
-<p>Hiển thị thông tin đặt trước từ khách hàng.</p>
-<button onclick="window.parent.backToHome()">⬅ Quay lại danh sách phòng</button>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đặt phòng trước</title>
+  <link rel="stylesheet" href="libs/flatpickr.min.css">
+  <script src="libs/flatpickr.min.js"></script>
+  <link rel="stylesheet" href="RoomBookingOnline.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+  <div class="booking-page-container">
+    <div class="booking-header-toolbar">
+      <h2 id="bookingOnlineTitle">Đặt phòng trước: <span id="currentRoomName">--</span></h2>
+    </div>
+
+    <div class="booking-content">
+      <div class="form-container">
+        <h3 class="form-title">Thông tin Đặt trước</h3>
+        
+        <div class="form-group">
+          <label for="customerName">Tên khách hàng (*)</label>
+          <input type="text" id="customerName" placeholder="Nhập tên khách hàng" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Số điện thoại (*)</label>
+          <input type="tel" id="phoneNumber" placeholder="Nhập số điện thoại" required>
+        </div>
+
+        <div class="form-group">
+          <label for="customerQuantity">Số lượng khách</label>
+          <input type="number" id="customerQuantity" value="2" min="1" max="50">
+        </div>
+
+        <div class="form-group">
+          <label for="startDate">Ngày đặt phòng (*)</label>
+          <div class="date-picker-group">
+            <input type="text" id="startDate" placeholder="Chọn ngày đặt phòng" required>
+            <i class="fa-solid fa-calendar-days date-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group time-group">
+            <label for="startTime">Giờ bắt đầu (*)</label>
+            <input type="time" id="startTime" required>
+          </div>
+          <div class="form-group time-group">
+            <label for="endTime">Giờ kết thúc (*)</label>
+            <input type="time" id="endTime" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="deposit">Tiền cọc (VNĐ)</label>
+          <input type="number" id="deposit" value="0" min="0">
+        </div>
+
+        <div class="form-actions">
+          <button id="btnConfirmBookingOnline" class="action-btn primary-btn">
+            <i class="fa-solid fa-check"></i> Xác nhận đặt trước
+          </button>
+          <button id="btnCancelBookingOnline" class="action-btn secondary-btn">
+            <i class="fa-solid fa-xmark"></i> Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="RoomBookingOnline.js"></script>
+</body>
+</html>

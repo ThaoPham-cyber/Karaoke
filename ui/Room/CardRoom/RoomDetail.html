@@ -1,3 +1,67 @@
-<h2>🎤 Trang Chi Tiết Phòng (RoomDetail.html)</h2>
-<p>Phòng đang hoạt động - hiển thị thời gian hát, chi phí, khách hiện tại.</p>
-<button onclick="window.parent.backToHome()">⬅ Quay lại danh sách phòng</button>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết phòng</title>
+  <link rel="stylesheet" href="../CardRoom/libs/flatpickr.min.css">
+  <script src="../CardRoom/libs/flatpickr.min.js"></script>
+  <link rel="stylesheet" href="RoomDetail.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+  <div class="detail-page-container">
+    <h2 id="detailRoomTitle">Chi tiết phòng</h2>
+
+    <div class="form-container">
+      <div class="form-group">
+        <label>Tên phòng:</label>
+        <input type="text" id="roomName" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Tên khách hàng:</label>
+        <input type="text" id="bookerName">
+      </div>
+
+      <div class="form-group">
+        <label>Số điện thoại:</label>
+        <input type="text" id="bookerPhone">
+      </div>
+
+      <div class="form-group">
+        <label>Ngày đặt:</label>
+        <input type="date" id="bookingDate">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group time-group">
+          <label>Giờ bắt đầu:</label>
+          <input type="time" id="startTime">
+        </div>
+        <div class="form-group time-group">
+          <label>Giờ kết thúc:</label>
+          <input type="time" id="endTime">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Số lượng khách:</label>
+        <input type="number" id="customerQuantity" min="1" max="50">
+      </div>
+
+      <div class="form-group">
+        <label>Tiền cọc (VNĐ):</label>
+        <input type="number" id="deposit" min="0">
+      </div>
+
+      <div class="action-buttons">
+        <button id="btnSaveChanges" class="btn primary-btn"><i class="fa-solid fa-save"></i> Lưu thay đổi</button>
+        <button id="btnReturnRoom" class="btn warning-btn"><i class="fa-solid fa-door-open"></i> Trả phòng</button>
+        <button id="btnBackToRoom" class="btn secondary-btn"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="RoomDetail.js"></script>
+</body>
+</html>

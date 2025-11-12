@@ -131,6 +131,16 @@ function populateRoomSelect(selectElement) {
     selectElement.appendChild(opt);
   });
 }
+// Khi click thẻ phòng:
+card.addEventListener("click", () => {
+    localStorage.setItem("selectedRoomId", room.id);
+    if (room.status === "inuse") {
+        window.loadContentPage("RoomDetail", "Room/CardRoom");
+    } else {
+        window.loadContentPage("RoomBooking", "Room/CardRoom");
+    }
+});
+
 
 // ======= KHỞI TẠO TRANG =======
 function initRoomPage() {
