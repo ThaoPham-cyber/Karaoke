@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý tài khoản</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+<div class="page-container">
+    <div class="page-header">
+        <h2><i class="fa-solid fa-user-gear"></i> Quản lý tài khoản</h2>
+    </div>
+
+    
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Tên đăng nhập</th>
+            <th>Vai trò</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody id="accountTableBody"></tbody>
+    </table>
+    
+    <div class="toolbar">
+        <button id="btnAddAccount" class="btn primary"><i class="fa-solid fa-user-plus"></i> Thêm tài khoản</button>
+        <button id="btnEditAccount" class="btn secondary"><i class="fa-solid fa-user-pen"></i> Sửa</button>
+        <button id="btnDeleteAccount" class="btn danger"><i class="fa-solid fa-user-xmark"></i> Xóa</button>
+    </div>
+</div>
+
+</body>
+</html>

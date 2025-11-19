@@ -1,0 +1,50 @@
+/* File: ui/Service/Service.css */
+
+/* Tái sử dụng style từ Account.css và EmployeeFile.css */
+
+.page-container {
+    padding: 20px;
+    background: #f3f4f7;
+    min-height: 100vh;
+}
+
+.page-header h2 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 25px;
+    color: #49007e; /* Màu tím đậm */
+}
+
+/* Bảng */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 30px; 
+}
+
+.data-table th {
+    background: #49007e; /* Màu header bảng */
+    color: white;
+    padding: 12px;
+    text-align: center;
+}
+
+.data-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.data-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Toolbar ở dưới */
+.toolbar {
+    margin-top: 20px;
+    text-align: center;
+}
+/* Kế thừa .btn, .primary, .secondary, .danger từ các file CSS chung */

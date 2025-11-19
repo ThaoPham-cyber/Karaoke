@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Báo cáo thống kê</title>
+  <link rel="stylesheet" href="Statistics.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="statistics-container">
+    <h2 class="page-title"><i class="fa-solid fa-chart-line"></i> Báo cáo thống kê hệ thống</h2>
+
+    <!-- Tổng quan -->
+    <div class="stat-overview">
+      <div class="stat-card">
+        <h3>Tổng doanh thu</h3>
+        <p id="totalRevenue">0 VNĐ</p>
+      </div>
+      <div class="stat-card">
+        <h3>Tổng khách hàng</h3>
+        <p id="totalCustomers">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Phòng đang sử dụng</h3>
+        <p id="activeRooms">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Tổng số phòng</h3>
+        <p id="totalRooms">0</p>
+      </div>
+    </div>
+
+    <!-- Biểu đồ -->
+    <div class="charts">
+      <div class="chart-box">
+        <h3><i class="fa-solid fa-chart-column"></i> Doanh thu theo tháng</h3>
+        <canvas id="revenueChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3><i class="fa-solid fa-pie-chart"></i> Tình trạng phòng</h3>
+        <canvas id="roomStatusChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Bảng thống kê -->
+    <div class="table-section">
+      <h3><i class="fa-solid fa-table-list"></i> Chi tiết đặt phòng</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Phòng</th>
+            <th>Khách hàng</th>
+            <th>Ngày đặt</th>
+            <th>Giờ bắt đầu</th>
+            <th>Giờ kết thúc</th>
+            <th>Tiền cọc (VNĐ)</th>
+          </tr>
+        </thead>
+        <tbody id="bookingTableBody"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <canvas id="canvas">
+        
+      </canvas>
+    </div>
+  </div>
+
+  <script src="Statistics.js"></script>
+</body>
+</html>

@@ -1,113 +1,151 @@
+// ==========================
+// RoomBooking.js
+// ==========================
 
 let currentRoomId = null;
 let currentRoom = null;
+let roomNameElement;
+let timeWarningElement;
+let btnConfirmBooking;
 
-document.addEventListener("DOMContentLoaded", () => {
-    initRoomBookingPage();
-});
-
+// === KHỞI TẠO TRANG ===
 function initRoomBookingPage() {
-    currentRoomId = localStorage.getItem("selectedRoomId");
-    if (!currentRoomId) {
-        alert("Không tìm thấy phòng được chọn!");
-        window.loadContentPage("Room", "Room");
-        return;
-    }
-    const storageData = localStorage.getItem("karaokeRoomData");
-    if (!storageData) {
-        alert("Không có dữ liệu phòng trong hệ thống!");
-        window.loadContentPage("Room", "Room");
-        return;
-    }
-    const parsedData = JSON.parse(storageData);
-    currentRoom = parsedData.rooms.find(r => r.id === parseInt(currentRoomId));
+  // 1️⃣ Lấy ID phòng đang chọn
+  currentRoomId = localStorage.getItem("selectedRoomId");
+  if (!currentRoomId) {
+    alert("⚠️ Không tìm thấy ID phòng được chọn.");
+    window.loadContentPage?.("Room", "Room");
+    return;
+  }
 
-    if (!currentRoom) {
-        alert("Phòng này không tồn tại trong dữ liệu!");
-        window.loadContentPage("Room", "Room");
-        return;
-    }
-    const titleSpan = document.getElementById("currentRoomName");
-    if (titleSpan) {
-        titleSpan.textContent = currentRoom.name;
-    }
-    if (typeof flatpickr !== "undefined") {
-        flatpickr("#startDate", {
-            dateFormat: "Y-m-d",
-            allowInput: true,
-            onChange: function (selectedDates, dateStr) {
-                document.getElementById("startDate").value = dateStr;
-            }
-        });
-    } else {
-        console.warn("⚠️ Flatpickr chưa được tải hoặc không tồn tại!");
-    }
-    const btnConfirm = document.getElementById("btnConfirmBooking");
-    const btnCancel = document.getElementById("btnCancelBooking");
+  // 2️⃣ Lấy dữ liệu phòng từ Local Storage
+  const data = JSON.parse(localStorage.getItem("karaokeRoomData")) || { rooms: [], nextId: 1 };
+  currentRoom = data.rooms.find((r) => r.id === parseInt(currentRoomId));
 
-    if (btnConfirm) btnConfirm.addEventListener("click", handleConfirmBooking);
-    if (btnCancel) btnCancel.addEventListener("click", handleCancelBooking);
-    const today = new Date();
-    const dateInput = document.getElementById("startDate");
-    const startTimeInput = document.getElementById("startTime");
-    const endTimeInput = document.getElementById("endTime");
+  if (!currentRoom) {
+    alert("⚠️ Không tìm thấy dữ liệu cho phòng này.");
+    window.loadContentPage?.("Room", "Room");
+    return;
+  }
 
-    if (dateInput) dateInput.valueAsDate = today;
-    const startHour = today.getHours() + 1;
-    if (startTimeInput) startTimeInput.value = `${String(startHour).padStart(2, "0")}:00`;
-    if (endTimeInput) endTimeInput.value = `${String(startHour + 2).padStart(2, "0")}:00`;
+  // 3️⃣ Hiển thị tên phòng trên tiêu đề
+  roomNameElement = document.getElementById("currentRoomName");
+  timeWarningElement = document.getElementById("timeWarning");
+  btnConfirmBooking = document.getElementById("btnConfirmBooking");
+  roomNameElement.textContent = currentRoom.name;
+
+  // 4️⃣ Thiết lập ngày/giờ mặc định
+  const today = new Date();
+  const dateInput = document.getElementById("startDate");
+  const startTimeInput = document.getElementById("startTime");
+
+  dateInput.value = today.toISOString().split("T")[0];
+  startTimeInput.value = `${String(today.getHours() + 1).padStart(2, "0")}:00`;
+
+  // 5️⃣ Gán sự kiện
+  btnConfirmBooking.addEventListener("click", handleConfirmBooking);
+  document.getElementById("btnCancelBooking").addEventListener("click", () => {
+    if (confirm("Bạn có chắc muốn hủy đặt phòng này và quay lại danh sách phòng?")) {
+      window.loadContentPage?.("Room", "Room");
+    }
+  });
+
+  document.getElementById("startTime").addEventListener("change", validateTime);
+  document.getElementById("endTime").addEventListener("change", validateTime);
 }
+
+// === KIỂM TRA THỜI GIAN ===
+function validateTime() {
+  const start = document.getElementById("startTime").value;
+  const end = document.getElementById("endTime").value;
+
+  if (!start || !end) {
+    timeWarningElement.textContent = "";
+    return false;
+  }
+
+  if (end <= start) {
+    timeWarningElement.textContent = "⚠️ Giờ kết thúc phải lớn hơn giờ bắt đầu!";
+    btnConfirmBooking.disabled = true;
+    return false;
+  }
+
+  timeWarningElement.textContent = "";
+  btnConfirmBooking.disabled = false;
+  return true;
+}
+
+// === XỬ LÝ XÁC NHẬN ĐẶT PHÒNG ===
 function handleConfirmBooking() {
-    const name = document.getElementById("customerName").value.trim();
-    const phone = document.getElementById("phoneNumber").value.trim();
-    const date = document.getElementById("startDate").value.trim();
-    const startTime = document.getElementById("startTime").value.trim();
-    const endTime = document.getElementById("endTime").value.trim();
-    const quantity = document.getElementById("customerQuantity").value;
-    const deposit = document.getElementById("deposit").value;
+  const name = document.getElementById("customerName").value.trim();
+  const phone = document.getElementById("phoneNumber").value.trim();
+  const date = document.getElementById("startDate").value;
+  const startTime = document.getElementById("startTime").value;
+  const endTime = document.getElementById("endTime").value;
+  const quantity = document.getElementById("customerQuantity").value;
+  const deposit = document.getElementById("deposit").value;
 
-    if (!name || !phone || !date || !startTime || !endTime) {
-        alert("⚠️ Vui lòng nhập đầy đủ thông tin bắt buộc!");
-        return;
-    }
+  // 🔍 Kiểm tra nhập liệu
+  if (!name || !phone || !date || !startTime || !endTime) {
+    alert("⚠️ Vui lòng nhập đầy đủ các trường bắt buộc (*)");
+    return;
+  }
 
-    const [sh, sm] = startTime.split(":").map(Number);
-    const [eh, em] = endTime.split(":").map(Number);
-    if (eh * 60 + em <= sh * 60 + sm) {
-        alert("⚠️ Giờ kết thúc phải lớn hơn giờ bắt đầu!");
-        return;
-    }
+  if (!validateTime()) {
+    alert("⚠️ Giờ kết thúc phải lớn hơn giờ bắt đầu!");
+    return;
+  }
 
-    if (!confirm(`Xác nhận mở phòng ${currentRoom.name} cho ${name} từ ${startTime} đến ${endTime}?`)) {
-        return;
-    }
+  // ✅ Xác nhận hành động
+  if (!confirm(`Xác nhận mở phòng ${currentRoom.name} cho khách hàng ${name}?`)) {
+    return;
+  }
 
-    const data = JSON.parse(localStorage.getItem("karaokeRoomData"));
-    const index = data.rooms.findIndex(r => r.id === parseInt(currentRoomId));
-    if (index === -1) {
-        alert("Không tìm thấy phòng trong dữ liệu hệ thống!");
-        return;
-    }
+  // === LƯU DỮ LIỆU BOOKING ===
+  const allData = JSON.parse(localStorage.getItem("karaokeRoomData")) || { rooms: [], nextId: 1 };
+  const roomIndex = allData.rooms.findIndex((r) => r.id === parseInt(currentRoomId));
 
-    data.rooms[index] = {
-        ...data.rooms[index],
-        status: "inuse",
-        booker: name,
-        phone,
-        bookingDate: date,
-        startTime,
-        endTime,
-        quantity,
-        deposit
+  if (roomIndex !== -1) {
+    allData.rooms[roomIndex].status = "inuse";
+    allData.rooms[roomIndex].booker = name;
+    allData.rooms[roomIndex].booking = {
+      customerName: name,
+      phone,
+      date,
+      startTime,
+      endTime,
+      quantity,
+      deposit,
+      total: 0, // Tổng tiền (tính trong RoomDetail)
     };
-    localStorage.setItem("karaokeRoomData", JSON.stringify(data));
+  }
 
-    alert(`✅ Phòng ${data.rooms[index].name} đã được mở cho khách hàng ${name}.`);
-    window.loadContentPage("Room", "Room");
+  // Lưu vào localStorage
+  localStorage.setItem("karaokeRoomData", JSON.stringify(allData));
+
+  // Ghi thêm log booking riêng (nếu cần thống kê)
+  const allBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+  allBookings.push({
+    roomId: currentRoom.id,
+    roomName: currentRoom.name,
+    name,
+    phone,
+    date,
+    startTime,
+    endTime,
+    quantity,
+    deposit,
+    status: "inuse",
+  });
+  localStorage.setItem("bookings", JSON.stringify(allBookings));
+
+  alert(`✅ Phòng ${currentRoom.name} đã được mở cho khách hàng ${name}!`);
+
+  // Quay lại danh sách phòng
+  if (window.loadContentPage) window.loadContentPage("Room", "Room");
+  else if (window.parent && window.parent.loadContentPage)
+    window.parent.loadContentPage("Room", "Room");
 }
 
-function handleCancelBooking() {
-    if (confirm("Bạn có chắc muốn hủy và quay lại trang Quản lý phòng không?")) {
-        window.loadContentPage("Room", "Room");
-    }
-}
+// === EXPORT ===
+window.initRoomBookingPage = initRoomBookingPage;

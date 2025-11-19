@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Dịch vụ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+<div class="page-container">
+    <div class="page-header">
+        <h2><i class="fa-solid fa-shop"></i> Quản lý Dịch vụ</h2>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Mã DV</th>
+                <th>Tên dịch vụ</th>
+                <th>Giá</th>
+                <th>Đơn vị tính</th>
+            </tr>
+        </thead>
+        <tbody id="serviceTableBody"></tbody>
+    </table>
+    
+    <div class="toolbar">
+        <button id="btnAddService" class="btn primary"><i class="fa-solid fa-plus"></i> Thêm dịch vụ</button>
+        <button id="btnEditService" class="btn secondary"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
+        <button id="btnDeleteService" class="btn danger"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+    </div>
+</div>
+</body>
+</html>

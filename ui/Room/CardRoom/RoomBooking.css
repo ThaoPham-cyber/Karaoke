@@ -131,3 +131,35 @@ input:focus {
 .secondary-btn:hover {
   background-color: #c82333;
 }
+/* Nút icon lịch */
+.input-icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+}
+
+.calendar-btn {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.calendar-btn:hover {
+  background-color: #0056b3;
+}
+
+.calendar-btn i {
+  font-size: 1.2em;
+}
+
+/* Căn giữa cảnh báo */
+.warning-message {
+  text-align: center;
+  color: #dc3545;
+  font-weight: 500;
+}

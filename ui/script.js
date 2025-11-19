@@ -1,20 +1,26 @@
+// File: D:/VSCode/ui/script.js
 const contentArea = document.getElementById("content-area");
-const buttons = document.querySelectorAll(".menu button");
 
-buttons.forEach(button => {
-  button.addEventListener("click", async () => {
-    const page = button.dataset.page; 
-    buttons.forEach(b => b.classList.remove("active"));
-    button.classList.add("active");
+// ✅ Hàm nạp trang con qua Bridge (Java gọi)
+window.loadContentPage = async function (folder, page) {
+  try {
+    const path = `${folder}/${page}.html`;
+    console.log("🔄 Đang load:", path);
 
-    try {
-      const response = await fetch(`pages/${page}.html`);
-      const html = await response.text();
-      contentArea.innerHTML = html;
-      contentArea.style.width = "100%";
-      contentArea.style.height = "100%";
-    } catch (error) {
-      contentArea.innerHTML = `<p style="color:red;">Không thể tải ${page}.html</p>`;
-    }
-  });
-});
+    // ⚙️ Gọi Java Bridge
+    const html = Bridge.loadHtmlContent(path);
+    contentArea.innerHTML = html;
+
+    // 🔁 Sau khi chèn, nạp lại các file script bên trong (Flatpickr, RoomBooking.js, ...)
+    const scripts = contentArea.querySelectorAll("script[src]");
+    scripts.forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      newScript.src = oldScript.src;
+      document.body.appendChild(newScript);
+    });
+
+  } catch (e) {
+    console.error("Lỗi loadContentPage:", e);
+    contentArea.innerHTML = `<p style="color:red;">Không thể tải trang ${page}</p>`;
+  }
+};

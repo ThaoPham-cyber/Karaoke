@@ -17,17 +17,27 @@ public class Main extends Application {
         WebEngine engine = webView.getEngine();
         engine.setJavaScriptEnabled(true);
 
-        JSBridge bridge = new JSBridge(engine);
+        // ⚙️ Giúp Flatpickr & JS hiện đại hoạt động
+        engine.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36");
+
+        // Khởi tạo Bridge
+        JSBridge bridge = new JSBridge(engine); 
 
         engine.getLoadWorker().stateProperty().addListener((obs, old, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
                 JSObject window = (JSObject) engine.executeScript("window");
+                // Gán Bridge vào JS với tên "Bridge" (ĐỒNG BỘ với UI.html)
                 window.setMember("Bridge", bridge);
                 System.out.println("✅ JSBridge đã gắn vào window.Bridge");
+
+                // ⚠️ QUAN TRỌNG: Kích hoạt code JavaScript để tải trang mặc định 
+                // sau khi Bridge đã sẵn sàng.
+                engine.executeScript(
+                    "document.querySelector('.menu button[data-page=\"Room\"]').click();"
+                );
             }
         });
 
-        // 🔹 Load UI.html thay vì Room.html
         File file = new File("D:/VSCode/ui/UI.html");
         engine.load(file.toURI().toString());
 

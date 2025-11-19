@@ -1,0 +1,75 @@
+/* --- BUTTONS --- */
+.btn {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px; /* Tăng padding để nút đẹp hơn */
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 10px; /* Tăng margin */
+    transition: background-color 0.2s, opacity 0.2s;
+    display: inline-flex; /* Quan trọng cho icon */
+    align-items: center;
+    gap: 5px; /* Khoảng cách giữa chữ và icon */
+}
+
+/* Các biến thể màu */
+.btn.primary { 
+    background-color: #45a049; /* Xanh lá */
+    color: white; 
+}
+.btn.secondary { 
+    background-color: #007bff; /* Xanh dương (thay thế màu cũ) */
+    color: white; 
+}
+.btn.danger { 
+    background-color: #dc3545; /* Đỏ */
+    color: white; 
+}
+
+.btn:hover { 
+    opacity: 0.9; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- DATA TABLE --- */
+.data-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.data-table th, .data-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.data-table th {
+    background-color: #007bff;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Zebra striping */
+}
+
+.data-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* --- TOOLBAR (ĐÃ SỬA LỖI CÚ PHÁP) --- */
+.toolbar {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: left; /* Thường để nút ở bên trái hoặc phải */
+    
+    /* ĐÃ SỬA LỖI: Xóa thuộc tính font-style không hợp lệ */
+    /* Bạn có thể thêm: */
+    /* background-color: #e9e9e9; */
+    /* padding: 15px; */
+    /* border-radius: 6px; */
+}
