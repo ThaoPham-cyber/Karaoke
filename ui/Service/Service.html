@@ -1,34 +1,94 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Quản lý Dịch vụ</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-</head>
-
-<body>
-<div class="page-container">
-    <div class="page-header">
-        <h2><i class="fa-solid fa-shop"></i> Quản lý Dịch vụ</h2>
+<div class="service-container">
+    <div class="service-header">
+        <input type="text" placeholder="Tìm kiếm dịch vụ..." class="search-box">
+        <select class="category-filter">
+            <option>Tất cả danh mục</option>
+            <option>Đồ uống</option>
+            <option>Đồ ăn</option>
+        </select>
+        <button class="add-btn">
+            <span>+</span> Thêm dịch vụ
+        </button>
     </div>
 
-    <table class="data-table">
+    <table class="service-table">
         <thead>
             <tr>
-                <th>Mã DV</th>
                 <th>Tên dịch vụ</th>
+                <th>Danh mục</th>
                 <th>Giá</th>
-                <th>Đơn vị tính</th>
+                <th>Đơn vị</th>
+                <th>Tồn kho</th>
+                <th>Mô tả</th>
+                <th>Thao tác</th>
             </tr>
         </thead>
-        <tbody id="serviceTableBody"></tbody>
+
+        <tbody>
+            <tr>
+                <td>Nước suối</td>
+                <td><span class="badge badge-blue">Đồ uống</span></td>
+                <td>10.000đ</td>
+                <td>Chai</td>
+                <td><span class="stock stock-green">150</span></td>
+                <td>Nước suối Aquafina 500ml</td>
+                <td class="action-box">
+                    <i class="fa fa-edit edit"></i>
+                    <i class="fa fa-trash delete"></i>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Bia Tiger</td>
+                <td><span class="badge badge-blue">Đồ uống</span></td>
+                <td>20.000đ</td>
+                <td>Lon</td>
+                <td><span class="stock stock-green">80</span></td>
+                <td>Bia Tiger lon 330ml</td>
+                <td class="action-box">
+                    <i class="fa fa-edit edit"></i>
+                    <i class="fa fa-trash delete"></i>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Snack Oishi</td>
+                <td><span class="badge badge-pink">Đồ ăn</span></td>
+                <td>15.000đ</td>
+                <td>Gói</td>
+                <td><span class="stock stock-green">60</span></td>
+                <td>Snack các loại</td>
+                <td class="action-box">
+                    <i class="fa fa-edit edit"></i>
+                    <i class="fa fa-trash delete"></i>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Mì ly</td>
+                <td><span class="badge badge-pink">Đồ ăn</span></td>
+                <td>12.000đ</td>
+                <td>Ly</td>
+                <td><span class="stock stock-yellow">45</span></td>
+                <td>Mì ly Hảo Hảo</td>
+                <td class="action-box">
+                    <i class="fa fa-edit edit"></i>
+                    <i class="fa fa-trash delete"></i>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Trái cây dĩa</td>
+                <td><span class="badge badge-pink">Đồ ăn</span></td>
+                <td>80.000đ</td>
+                <td>Dĩa</td>
+                <td><span class="stock stock-red">20</span></td>
+                <td>Trái cây tươi theo mùa</td>
+                <td class="action-box">
+                    <i class="fa fa-edit edit"></i>
+                    <i class="fa fa-trash delete"></i>
+                </td>
+            </tr>
+        </tbody>
     </table>
-    
-    <div class="toolbar">
-        <button id="btnAddService" class="btn primary"><i class="fa-solid fa-plus"></i> Thêm dịch vụ</button>
-        <button id="btnEditService" class="btn secondary"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
-        <button id="btnDeleteService" class="btn danger"><i class="fa-solid fa-trash-can"></i> Xóa</button>
-    </div>
 </div>
-</body>
-</html>

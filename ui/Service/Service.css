@@ -1,50 +1,122 @@
-/* File: ui/Service/Service.css */
-
-/* Tái sử dụng style từ Account.css và EmployeeFile.css */
-
-.page-container {
-    padding: 20px;
-    background: #f3f4f7;
-    min-height: 100vh;
+.service-container {
+    padding: 25px;
+    animation: fadeIn 0.5s ease;
 }
 
-.page-header h2 {
-    text-align: center;
-    font-size: 26px;
-    margin-bottom: 25px;
-    color: #49007e; /* Màu tím đậm */
+.service-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
-/* Bảng */
-.data-table {
+.search-box {
+    flex: 1;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    transition: 0.3s;
+}
+
+.search-box:focus {
+    border-color: #7b4dff;
+    box-shadow: 0 0 6px rgba(123, 77, 255, 0.4);
+}
+
+.category-filter {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+}
+
+.add-btn {
+    background: #7b4dff;
+    border: none;
+    padding: 12px 18px;
+    color: white;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.3s;
+}
+
+.add-btn:hover {
+    background: #6837ff;
+    transform: translateY(-2px);
+}
+
+.service-table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    border-radius: 6px;
+    background: #fff;
+    border-radius: 16px;
     overflow: hidden;
-    margin-bottom: 30px; 
 }
 
-.data-table th {
-    background: #49007e; /* Màu header bảng */
-    color: white;
-    padding: 12px;
-    text-align: center;
+.service-table th {
+    padding: 16px;
+    background: #f7f7f7;
+    text-align: left;
 }
 
-.data-table td {
-    padding: 10px;
-    text-align: center;
+.service-table td {
+    padding: 16px;
     border-bottom: 1px solid #eee;
 }
 
-.data-table tr:hover {
-    background-color: #f1f1f1;
+.service-table tr:hover {
+    background: #faf8ff;
+    transition: 0.25s;
 }
 
-/* Toolbar ở dưới */
-.toolbar {
-    margin-top: 20px;
-    text-align: center;
+/* Badge */
+.badge {
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 13px;
 }
-/* Kế thừa .btn, .primary, .secondary, .danger từ các file CSS chung */
+
+.badge-blue {
+    background: #ecd7ff;
+    color: #7b4dff;
+}
+
+.badge-pink {
+    background: #ffd8fd;
+    color: #d633c2;
+}
+
+/* Stock label */
+.stock {
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.stock-green { background: #d4ffdd; color: #0e9a28; }
+.stock-yellow { background: #fff4b8; color: #c59a00; }
+.stock-red { background: #ffd6d6; color: #d60000; }
+
+/* Action icons */
+.action-box i {
+    margin-right: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 18px;
+}
+
+.edit { color: #4b63ff; }
+.delete { color: #ff3b3b; }
+
+.action-box i:hover {
+    transform: scale(1.2);
+}
+
+/* Page fade-in */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
