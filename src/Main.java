@@ -29,11 +29,8 @@ public class Main extends Application {
                 // Gán Bridge vào JS với tên "Bridge" (ĐỒNG BỘ với UI.html)
                 window.setMember("Bridge", bridge);
                 System.out.println("✅ JSBridge đã gắn vào window.Bridge");
-
-                // ⚠️ QUAN TRỌNG: Kích hoạt code JavaScript để tải trang mặc định 
-                // sau khi Bridge đã sẵn sàng.
                 engine.executeScript(
-                    "document.querySelector('.menu button[data-page=\"Room\"]').click();"
+                    "document.querySelector('.menu button[data-page=\"Home\"]').click();"
                 );
             }
         });

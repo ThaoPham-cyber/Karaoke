@@ -1,63 +1,119 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <title>Quản lý phòng</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <link rel="stylesheet" href="Room.css">
-</head>
-<body>
-  <div class="room-page-container">
-    <div class="room-header-toolbar">
-      <button class="back-btn" onclick="window.backToHome()">
-        <i class="fa-solid fa-arrow-left"></i> Quay lại
-      </button>
-      <h2>Quản lý phòng</h2>
+<!-- File: ui/Room/Room.html -->
+
+<div class="room-page">
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-box">
+    <div class="summary-item available">
+      <h3>Phòng trống</h3>
+      <span id="sumAvailable">0 phòng</span>
+      <i class="fa-solid fa-door-open"></i>
     </div>
 
-    <div class="room-grid" id="roomContainer"></div>
-
-    <div class="room-actions">
-      <button id="btnAddRoom" class="action-btn primary-btn"><i class="fa-solid fa-plus"></i> Thêm phòng</button>
-      <button id="btnEditRoom" class="action-btn secondary-btn"><i class="fa-solid fa-pen"></i> Sửa phòng</button>
-      <button id="btnDeleteRoom" class="action-btn secondary-btn"><i class="fa-solid fa-trash"></i> Xóa phòng</button>
+    <div class="summary-item using">
+      <h3>Đang sử dụng</h3>
+      <span id="sumUsing">0 phòng</span>
+      <i class="fa-solid fa-clock"></i>
     </div>
 
-    <!-- Hộp thoại thêm/sửa -->
-    <div id="roomDialog" class="dialog hidden">
-      <div class="dialog-content">
-        <h3 id="dialogTitle">Thêm phòng mới</h3>
-        <label>Tên phòng:</label>
-        <input type="text" id="roomNameInput">
-        <label>Loại phòng:</label>
-        <select id="roomType">
-          <option value="normal">Phòng Thường</option>
-          <option value="vip">Phòng VIP</option>
-          <option value="booked">Phòng Đặt trước</option>
-          <option value="repair">Phòng Sửa chữa</option>
-        </select>
-        <label>Giá (VNĐ/giờ):</label>
-        <input type="number" id="roomPriceInput" value="50000">
-        <div class="dialog-actions">
-          <button id="btnConfirmAction" class="primary-btn">Xác nhận</button>
-          <button id="btnCancelDialog">Hủy</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Hộp thoại chọn phòng để xóa/sửa -->
-    <div id="selectRoomDialog" class="dialog hidden">
-      <div class="dialog-content">
-        <h3 id="selectDialogTitle">Chọn phòng để thao tác</h3>
-        <select id="roomSelectToDeleteEdit"></select>
-        <div class="dialog-actions">
-          <button id="btnConfirmSelect" class="primary-btn">Tiếp tục</button>
-          <button id="btnCancelSelect">Hủy</button>
-        </div>
-      </div>
+    <div class="summary-item maintenance">
+      <h3>Bảo trì</h3>
+      <span id="sumMaintenance">0 phòng</span>
+      <i class="fa-solid fa-toolbox"></i>
     </div>
   </div>
 
-  <script src="Room.js"></script>
-</body>
-</html>
+  <!-- SEARCH & FILTER -->
+  <div class="room-controls">
+    <input id="searchRoom" class="search-box" type="text" placeholder="Tìm kiếm phòng...">
+
+    <select id="filterStatus" class="filter-status">
+      <option value="__all">Tất cả trạng thái</option>
+      <option value="available">Còn trống</option>
+      <option value="using">Đang sử dụng</option>
+      <option value="maintenance">Bảo trì</option>
+    </select>
+
+    <button id="addRoomBtn" class="btn-add"><i class="fa-solid fa-plus"></i> Thêm phòng</button>
+  </div>
+
+  <!-- ROOM LIST -->
+  <div id="roomList" class="room-list"></div>
+</div>
+
+<!-- MODAL ADD/EDIT ROOM -->
+<div id="roomModal" class="modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="roomModalTitle">Thêm phòng</h3>
+      <button id="closeRoomModal" class="modal-close">&times;</button>
+    </div>
+
+    <form id="roomForm" class="modal-form">
+      <input type="hidden" id="roomId">
+
+      <label>Tên phòng
+        <input id="fieldRoomName" type="text" required>
+      </label>
+
+      <label>Loại phòng
+        <select id="fieldRoomType">
+          <option>VIP</option>
+          <option>Standard</option>
+          <option>Deluxe</option>
+        </select>
+      </label>
+
+      <label>Sức chứa
+        <input id="fieldCapacity" type="number" min="1" required>
+      </label>
+
+      <label>Giá (VNĐ/giờ)
+        <input id="fieldPrice" type="number" min="1000" step="1000" required>
+      </label>
+
+      <label>Trạng thái
+        <select id="fieldStatus">
+          <option value="available">Còn trống</option>
+          <option value="using">Đang sử dụng</option>
+          <option value="maintenance">Bảo trì</option>
+        </select>
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" id="cancelRoom" class="btn-secondary">Hủy</button>
+        <button type="submit" class="btn-primary">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL ADD CUSTOMER -->
+<div id="customerModal" class="modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Thêm khách hàng</h3>
+      <button id="closeCustomerModal" class="modal-close">&times;</button>
+    </div>
+
+    <form id="customerForm" class="modal-form">
+
+      <label>Tên khách hàng
+        <input id="fieldCustomerName" type="text" required>
+      </label>
+
+      <label>Giờ bắt đầu
+        <input id="fieldStartTime" type="time" required>
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="cancelCustomer">Hủy</button>
+        <button type="submit" class="btn-primary">Thêm</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="Room.js"></script>

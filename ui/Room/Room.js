@@ -1,250 +1,402 @@
-// ==========================
-// ROOM.JS - QUẢN LÝ PHÒNG
-// ==========================
+// File: ui/Room/Room.js
+(function () {
+  const STORAGE_KEY = "karaoke_rooms_v1";
 
-const LOCAL_STORAGE_KEY = "karaokeRoomData";
+  // ---------- DOM ----------
+  const sumAvailableEl = document.getElementById("sumAvailable");
+  const sumUsingEl = document.getElementById("sumUsing");
+  const sumMaintenanceEl = document.getElementById("sumMaintenance");
 
-let roomContainer;
-let roomDialog, selectRoomDialog;
-let dialogTitle, roomNameInput, roomTypeSelect, roomPriceInput;
-let btnConfirmAction, btnCancelDialog;
-let selectDialogTitle, roomSelectToDeleteEdit, btnConfirmSelect, btnCancelSelect;
-let btnAddRoom, btnEditRoom, btnDeleteRoom;
+  const searchRoom = document.getElementById("searchRoom");
+  const filterStatus = document.getElementById("filterStatus");
+  const addRoomBtn = document.getElementById("addRoomBtn");
+  const roomListEl = document.getElementById("roomList");
 
-let allRoomsData = [];
-let nextRoomId = 1;
-let currentAction = "";
-let roomToEditId = null;
+  // room modal
+  const roomModal = document.getElementById("roomModal");
+  const roomModalTitle = document.getElementById("roomModalTitle");
+  const closeRoomModal = document.getElementById("closeRoomModal");
+  const roomForm = document.getElementById("roomForm");
+  const roomIdInput = document.getElementById("roomId");
+  const fieldRoomName = document.getElementById("fieldRoomName");
+  const fieldRoomType = document.getElementById("fieldRoomType");
+  const fieldCapacity = document.getElementById("fieldCapacity");
+  const fieldPrice = document.getElementById("fieldPrice");
+  const fieldStatus = document.getElementById("fieldStatus");
+  const cancelRoom = document.getElementById("cancelRoom");
 
-// Dữ liệu mẫu khi chưa có localStorage
-const defaultRoomsData = [
-  { id: 1, name: "Phòng 101", status: "normal", price: 50000 },
-  { id: 2, name: "Phòng 102", status: "inuse", price: 80000, currentCost: "350,000 VNĐ", duration: "4h 30m" },
-  { id: 3, name: "Phòng 103", status: "vip", price: 120000 },
-  { id: 4, name: "Phòng 104", status: "booked", price: 100000, booker: "Nguyễn Văn A" },
-  { id: 5, name: "Phòng 105", status: "repair", price: 50000 },
-  { id: 6, name: "Phòng 106", status: "normal", price: 50000 },
-];
+  // customer modal
+  const customerModal = document.getElementById("customerModal");
+  const closeCustomerModal = document.getElementById("closeCustomerModal");
+  const customerForm = document.getElementById("customerForm");
+  const fieldCustomerName = document.getElementById("fieldCustomerName");
+  const fieldStartTime = document.getElementById("fieldStartTime");
+  const cancelCustomer = document.getElementById("cancelCustomer");
 
-// ==========================
-// HÀM HỖ TRỢ
-// ==========================
-function getStatusLabel(status) {
-  switch (status) {
-    case "normal": return "Phòng trống";
-    case "vip": return "Phòng VIP";
-    case "inuse": return "Đang sử dụng";
-    case "booked": return "Đặt trước";
-    case "repair": return "Đang sửa chữa";
-    default: return "Không xác định";
+  // internal state
+  let rooms = [];
+  let editingRoomId = null;   // for customer modal -> which room to add customer
+
+  // ---------- utilities ----------
+  function genId(prefix = "R") {
+    return prefix + "_" + Date.now().toString(36) + "_" + Math.floor(Math.random() * 9000);
   }
-}
 
-// ==========================
-// LOAD & SAVE LOCALSTORAGE
-// ==========================
-function loadRoomsData() {
-  const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (data) {
+  function load() {
     try {
-      const parsed = JSON.parse(data);
-      allRoomsData = parsed.rooms || [];
-      nextRoomId = parsed.nextId || (allRoomsData.length + 1);
-    } catch {
-      allRoomsData = [...defaultRoomsData];
-      nextRoomId = defaultRoomsData.length + 1;
-    }
-  } else {
-    allRoomsData = [...defaultRoomsData];
-    nextRoomId = defaultRoomsData.length + 1;
-    saveRoomsData();
-  }
-}
-
-function saveRoomsData() {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ rooms: allRoomsData, nextId: nextRoomId }));
-}
-
-// ==========================
-// HIỂN THỊ DANH SÁCH PHÒNG
-// ==========================
-function renderRooms() {
-  if (!roomContainer) return;
-  roomContainer.innerHTML = "";
-
-  allRoomsData.forEach(room => {
-    const card = document.createElement("div");
-    card.className = `room-card ${room.status}`;
-    card.dataset.id = room.id;
-
-    let content = `<div class="room-name">${room.name}</div>`;
-
-    switch (room.status) {
-      case "inuse":
-        content += `
-          <div class="room-detail-info">
-            <p><i class="fa-solid fa-microphone"></i> Đang hát: ${room.duration || "0h 0m"}</p>
-            <p><i class="fa-solid fa-money-bill-wave"></i> Tạm tính: ${room.currentCost || "0 VNĐ"}</p>
-          </div>`;
-        break;
-
-      case "booked":
-        content += `<div class="room-detail-info">
-            <p><i class="fa-solid fa-user-check"></i> Đặt bởi: ${room.booker || "Không rõ"}</p>
-          </div>`;
-        break;
-
-      default:
-        content += `<div class="room-status-text">${getStatusLabel(room.status)}</div>`;
-        break;
-    }
-
-    card.innerHTML = content;
-
-    // ✅ Lưu ID phòng & điều hướng đúng trang
-    card.addEventListener("click", () => {
-      localStorage.setItem("selectedRoomId", room.id);
-
-      let targetPage = "";
-      const targetFolder = "Room/CardRoom";
-
-      if (room.status === "normal" || room.status === "vip") targetPage = "RoomBooking";
-      else if (room.status === "inuse") targetPage = "RoomDetail";
-      else if (room.status === "booked") targetPage = "RoomBookingOnline";
-      else return alert(`Phòng ${room.name} đang ${getStatusLabel(room.status)}, không thể mở.`);
-
-      if (window.loadContentPage) {
-        window.loadContentPage(targetPage, targetFolder);
-      } else if (window.parent && window.parent.loadContentPage) {
-        window.parent.loadContentPage(targetPage, targetFolder);
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        rooms = JSON.parse(raw);
       } else {
-        alert("Không thể tải trang chi tiết phòng.");
+        seedDemo();
       }
+    } catch (e) {
+      console.error("Failed to load rooms, seed demo.", e);
+      seedDemo();
+    }
+  }
+
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
+  }
+
+  function seedDemo() {
+    rooms = [
+      {
+        id: genId(),
+        name: "Phòng VIP 01",
+        type: "VIP",
+        capacity: 10,
+        price: 200000,
+        status: "using",
+        customers: [{ name: "Nguyễn Văn A", start: todayTimeString("14:30") }],
+        note: ""
+      },
+      {
+        id: genId(),
+        name: "Phòng VIP 02",
+        type: "VIP",
+        capacity: 10,
+        price: 200000,
+        status: "available",
+        customers: [],
+        note: ""
+      },
+      {
+        id: genId(),
+        name: "Phòng 03",
+        type: "Standard",
+        capacity: 6,
+        price: 100000,
+        status: "available",
+        customers: [],
+        note: ""
+      },
+      {
+        id: genId(),
+        name: "Phòng 04",
+        type: "Standard",
+        capacity: 6,
+        price: 100000,
+        status: "using",
+        customers: [{ name: "Trần Thị B", start: todayTimeString("15:00") }],
+        note: ""
+      },
+      {
+        id: genId(),
+        name: "Phòng 05",
+        type: "Couple",
+        capacity: 2,
+        price: 80000,
+        status: "maintenance",
+        customers: [],
+        note: ""
+      }
+    ];
+    save();
+  }
+
+  function todayTimeString(hhmm) {
+    // optional: if hhmm provided, use that; else use current time
+    if (hhmm) {
+      return hhmm;
+    }
+    const d = new Date();
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function pad(n) {
+    return (n < 10 ? "0" : "") + n;
+  }
+
+  function formatCurrency(v) {
+    return v.toLocaleString("vi-VN") + "đ";
+  }
+
+  // ---------- render UI ----------
+  function renderSummary() {
+    const totalAvailable = rooms.filter(r => r.status === "available").length;
+    const totalUsing = rooms.filter(r => r.status === "using").length;
+    const totalMaint = rooms.filter(r => r.status === "maintenance").length;
+
+    sumAvailableEl.textContent = `${totalAvailable} phòng`;
+    sumUsingEl.textContent = `${totalUsing} phòng`;
+    sumMaintenanceEl.textContent = `${totalMaint} phòng`;
+  }
+
+  function statusBadgeClass(status) {
+    if (status === "available") return "status-available";
+    if (status === "using") return "status-using";
+    if (status === "maintenance") return "status-maintenance";
+    return "status-available";
+  }
+
+  function cardBorderClass(status) {
+    if (status === "using") return "red";
+    if (status === "maintenance") return "yellow";
+    return ""; // green by default from css
+  }
+
+  function renderRooms() {
+    const keyword = (searchRoom.value || "").toLowerCase().trim();
+    const filter = filterStatus.value || "__all";
+
+    roomListEl.innerHTML = "";
+
+    const list = rooms.filter(r => {
+      if (filter !== "__all" && r.status !== filter) return false;
+      if (!keyword) return true;
+      return r.name.toLowerCase().includes(keyword) || (r.type || "").toLowerCase().includes(keyword);
     });
 
-    roomContainer.appendChild(card);
-  });
-}
-
-// ==========================
-// CÁC HỘP THOẠI & NÚT CHỨC NĂNG
-// ==========================
-function populateRoomSelect(selectElement) {
-  selectElement.innerHTML = "";
-  allRoomsData.forEach(r => {
-    const opt = document.createElement("option");
-    opt.value = r.id;
-    opt.textContent = `${r.name} (${getStatusLabel(r.status)})`;
-    selectElement.appendChild(opt);
-  });
-}
-
-// ==========================
-// KHỞI TẠO TRANG
-// ==========================
-function initRoomPage() {
-  // Gán phần tử
-  roomContainer = document.getElementById("roomContainer");
-  roomDialog = document.getElementById("roomDialog");
-  selectRoomDialog = document.getElementById("selectRoomDialog");
-  dialogTitle = document.getElementById("dialogTitle");
-  roomNameInput = document.getElementById("roomNameInput");
-  roomTypeSelect = document.getElementById("roomType");
-  roomPriceInput = document.getElementById("roomPriceInput");
-  btnConfirmAction = document.getElementById("btnConfirmAction");
-  btnCancelDialog = document.getElementById("btnCancelDialog");
-  selectDialogTitle = document.getElementById("selectDialogTitle");
-  roomSelectToDeleteEdit = document.getElementById("roomSelectToDeleteEdit");
-  btnConfirmSelect = document.getElementById("btnConfirmSelect");
-  btnCancelSelect = document.getElementById("btnCancelSelect");
-  btnAddRoom = document.getElementById("btnAddRoom");
-  btnEditRoom = document.getElementById("btnEditRoom");
-  btnDeleteRoom = document.getElementById("btnDeleteRoom");
-
-  // Tải dữ liệu
-  loadRoomsData();
-  renderRooms();
-
-  // ===== THÊM PHÒNG =====
-  btnAddRoom.onclick = () => {
-    currentAction = "add";
-    dialogTitle.textContent = "Thêm phòng mới";
-    roomNameInput.value = `Phòng ${nextRoomId}`;
-    roomTypeSelect.value = "normal";
-    roomPriceInput.value = 50000;
-    roomDialog.classList.remove("hidden");
-  };
-
-  // ===== SỬA PHÒNG =====
-  btnEditRoom.onclick = () => {
-    currentAction = "edit";
-    selectDialogTitle.textContent = "Chọn phòng để sửa";
-    populateRoomSelect(roomSelectToDeleteEdit);
-    selectRoomDialog.classList.remove("hidden");
-  };
-
-  // ===== XÓA PHÒNG =====
-  btnDeleteRoom.onclick = () => {
-    currentAction = "delete";
-    selectDialogTitle.textContent = "Chọn phòng để xóa";
-    populateRoomSelect(roomSelectToDeleteEdit);
-    selectRoomDialog.classList.remove("hidden");
-  };
-
-  // ===== NÚT HỦY =====
-  btnCancelDialog.onclick = () => roomDialog.classList.add("hidden");
-  btnCancelSelect.onclick = () => selectRoomDialog.classList.add("hidden");
-
-  // ===== XÁC NHẬN THÊM / SỬA =====
-  btnConfirmAction.onclick = () => {
-    const name = roomNameInput.value.trim();
-    const status = roomTypeSelect.value;
-    const price = parseInt(roomPriceInput.value) || 0;
-
-    if (!name) return alert("Tên phòng không được để trống!");
-
-    if (currentAction === "add") {
-      allRoomsData.push({ id: nextRoomId++, name, status, price });
-    } else if (currentAction === "edit" && roomToEditId) {
-      const room = allRoomsData.find(r => r.id === roomToEditId);
-      if (room) {
-        room.name = name;
-        room.status = status;
-        room.price = price;
-      }
+    if (list.length === 0) {
+      roomListEl.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#777; padding:30px">Không có phòng nào</div>`;
     }
 
-    saveRoomsData();
-    roomDialog.classList.add("hidden");
+    list.forEach(r => {
+      const card = document.createElement("div");
+      card.className = `room-card ${cardBorderClass(r.status)}`;
+
+      const statusText =
+        r.status === "available" ? "Còn trống" :
+        r.status === "using" ? "Đang sử dụng" :
+        r.status === "maintenance" ? "Bảo trì" : r.status;
+
+      card.innerHTML = `
+        <div>
+          <h3 style="margin:0 0 6px 0">${escapeHtml(r.name)}</h3>
+          <div style="margin-bottom:8px; color:#6b21a8">${escapeHtml(r.type || "")}</div>
+
+          <div style="font-size:13px; color:#555">
+            <div style="margin-bottom:6px"><i class="fa-solid fa-user"></i> Sức chứa: ${r.capacity} người</div>
+            <div style="margin-bottom:6px">Giá: ${formatCurrency(r.price)}/giờ</div>
+            ${r.customers && r.customers.length ? `<div style="background:#f3f4f6;padding:8px;border-radius:8px;margin-top:8px">
+              KH: ${escapeHtml(r.customers[0].name)}<br>
+              <small>⏱ Bắt đầu: ${escapeHtml(r.customers[0].start)}</small>
+            </div>` : ""}
+          </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+          <div><span class="status-badge ${statusBadgeClass(r.status)}">${statusText}</span></div>
+
+          <div class="actions">
+            <button class="btn-edit" data-id="${r.id}"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
+            <button class="btn-customer" data-id="${r.id}"><i class="fa-solid fa-user-plus"></i> Khách</button>
+            <button class="btn-delete" data-id="${r.id}"><i class="fa-solid fa-trash"></i> Xóa</button>
+          </div>
+        </div>
+      `;
+
+      roomListEl.appendChild(card);
+    });
+
+    // bind events
+    roomListEl.querySelectorAll(".btn-edit").forEach(b => b.addEventListener("click", onEditRoom));
+    roomListEl.querySelectorAll(".btn-delete").forEach(b => b.addEventListener("click", onDeleteRoom));
+    roomListEl.querySelectorAll(".btn-customer").forEach(b => b.addEventListener("click", onOpenCustomerModal));
+    renderSummary();
+  }
+
+  // ---------- actions ----------
+  function onAddRoomClick() {
+    // open empty modal
+    openRoomModal("add");
+  }
+
+  function openRoomModal(mode, room = null) {
+    roomModal.classList.remove("hidden");
+    if (mode === "add") {
+      roomModalTitle.textContent = "Thêm phòng";
+      roomForm.reset();
+      roomIdInput.value = "";
+      fieldRoomType.value = "VIP";
+      fieldStatus.value = "available";
+      fieldCapacity.value = 4;
+      fieldPrice.value = 100000;
+    } else {
+      roomModalTitle.textContent = "Sửa phòng";
+      roomIdInput.value = room.id;
+      fieldRoomName.value = room.name;
+      fieldRoomType.value = room.type;
+      fieldCapacity.value = room.capacity;
+      fieldPrice.value = room.price;
+      fieldStatus.value = room.status;
+    }
+    setTimeout(() => fieldRoomName.focus(), 80);
+  }
+
+  function closeRoomModalFn() {
+    roomModal.classList.add("hidden");
+  }
+
+  function onEditRoom(e) {
+    const id = e.currentTarget.dataset.id;
+    const room = rooms.find(r => r.id === id);
+    if (room) openRoomModal("edit", room);
+  }
+
+  function onDeleteRoom(e) {
+    const id = e.currentTarget.dataset.id;
+    const room = rooms.find(r => r.id === id);
+    if (!room) return;
+    if (!confirm(`Bạn có chắc muốn xóa ${room.name}?`)) return;
+    rooms = rooms.filter(r => r.id !== id);
+    save();
+    renderRoomsAndSummary();
+  }
+
+  function onOpenCustomerModal(e) {
+    const id = e.currentTarget.dataset.id;
+    editingRoomId = id;
+    // reset customer form
+    customerForm.reset();
+    fieldStartTime.value = ""; // let user choose
+    customerModal.classList.remove("hidden");
+    setTimeout(() => fieldCustomerName.focus(), 80);
+  }
+
+  function closeCustomerModalFn() {
+    customerModal.classList.add("hidden");
+    editingRoomId = null;
+  }
+
+  // ---------- form handlers ----------
+  roomForm.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const id = roomIdInput.value;
+    const data = {
+      id: id || genId(),
+      name: fieldRoomName.value.trim(),
+      type: fieldRoomType.value,
+      capacity: Number(fieldCapacity.value),
+      price: Number(fieldPrice.value),
+      status: fieldStatus.value,
+      customers: []
+    };
+
+    if (!data.name) {
+      alert("Tên phòng không được để trống");
+      return;
+    }
+
+    if (id) {
+      // update existing (keep customers)
+      const idx = rooms.findIndex(r => r.id === id);
+      if (idx >= 0) {
+        data.customers = rooms[idx].customers || [];
+        rooms[idx] = data;
+      }
+    } else {
+      // add new
+      rooms.push(data);
+    }
+
+    save();
+    closeRoomModalFn();
+    renderRoomsAndSummary();
+  });
+
+  cancelRoom.addEventListener("click", (e) => {
+    e.preventDefault();
+    closeRoomModalFn();
+  });
+
+  // customer form submit
+  customerForm.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    if (!editingRoomId) return;
+
+    const name = fieldCustomerName.value.trim();
+    const startTime = fieldStartTime.value || todayTimeString();
+
+    if (!name) {
+      alert("Vui lòng nhập tên khách hàng");
+      return;
+    }
+
+    const room = rooms.find(r => r.id === editingRoomId);
+    if (!room) {
+      alert("Phòng không tồn tại");
+      closeCustomerModalFn();
+      return;
+    }
+
+    // push customer at front
+    room.customers = room.customers || [];
+    room.customers.unshift({ name, start: startTime });
+
+    // change status to using
+    room.status = "using";
+
+    save();
+    closeCustomerModalFn();
+    renderRoomsAndSummary();
+  });
+
+  cancelCustomer.addEventListener("click", (e) => {
+    e.preventDefault();
+    closeCustomerModalFn();
+  });
+
+  // ---------- helpers ----------
+  function renderRoomsAndSummary() {
     renderRooms();
-  };
+    renderSummary();
+  }
 
-  // ===== XÁC NHẬN XÓA / CHỌN PHÒNG =====
-  btnConfirmSelect.onclick = () => {
-    const roomId = parseInt(roomSelectToDeleteEdit.value);
-    selectRoomDialog.classList.add("hidden");
+  function escapeHtml(s) {
+    if (s == null) return "";
+    return String(s)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
 
-    if (currentAction === "delete") {
-      const room = allRoomsData.find(r => r.id === roomId);
-      if (!room) return alert("Không tìm thấy phòng để xóa!");
-      if (confirm(`Bạn có chắc muốn xóa ${room.name}?`)) {
-        allRoomsData = allRoomsData.filter(r => r.id !== roomId);
-        saveRoomsData();
-        renderRooms();
-        alert("Đã xóa phòng thành công!");
-      }
-    } else if (currentAction === "edit") {
-      const room = allRoomsData.find(r => r.id === roomId);
-      if (!room) return;
-      roomToEditId = roomId;
-      dialogTitle.textContent = `Sửa ${room.name}`;
-      roomNameInput.value = room.name;
-      roomTypeSelect.value = room.status;
-      roomPriceInput.value = room.price;
-      roomDialog.classList.remove("hidden");
-    }
-  };
-}
+  // ---------- search & filter ----------
+  searchRoom.addEventListener("input", () => {
+    renderRooms();
+  });
 
-// Gắn hàm toàn cục
-window.initRoomPage = initRoomPage;
+  filterStatus.addEventListener("change", () => {
+    renderRooms();
+  });
+
+  // ---------- modal close buttons ----------
+  closeRoomModal.addEventListener("click", closeRoomModalFn);
+  closeCustomerModal.addEventListener("click", closeCustomerModalFn);
+
+  // ---------- initial bind ----------
+  addRoomBtn.addEventListener("click", onAddRoomClick);
+
+  // ---------- init ----------
+  function init() {
+    load();
+    renderRoomsAndSummary();
+  }
+
+  init();
+
+})();

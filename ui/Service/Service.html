@@ -1,94 +1,87 @@
+<!-- File: ui/Service/Service.html -->
 <div class="service-container">
-    <div class="service-header">
-        <input type="text" placeholder="Tìm kiếm dịch vụ..." class="search-box">
-        <select class="category-filter">
-            <option>Tất cả danh mục</option>
-            <option>Đồ uống</option>
-            <option>Đồ ăn</option>
-        </select>
-        <button class="add-btn">
-            <span>+</span> Thêm dịch vụ
-        </button>
+
+  <div class="service-header">
+    <div class="left-controls">
+      <div class="search-wrapper">
+        <input id="searchInput" class="search-box" type="text" placeholder="Tìm kiếm dịch vụ...">
+        <div id="suggestList" class="suggest-list hidden"></div>
+      </div>
+
+      <select id="categoryFilter" class="category-filter">
+        <option value="__all">Tất cả danh mục</option>
+      </select>
     </div>
 
-    <table class="service-table">
-        <thead>
-            <tr>
-                <th>Tên dịch vụ</th>
-                <th>Danh mục</th>
-                <th>Giá</th>
-                <th>Đơn vị</th>
-                <th>Tồn kho</th>
-                <th>Mô tả</th>
-                <th>Thao tác</th>
-            </tr>
-        </thead>
+    <button id="addBtn" class="add-btn">
+      <span class="plus">+</span> Thêm dịch vụ
+    </button>
+  </div>
 
-        <tbody>
-            <tr>
-                <td>Nước suối</td>
-                <td><span class="badge badge-blue">Đồ uống</span></td>
-                <td>10.000đ</td>
-                <td>Chai</td>
-                <td><span class="stock stock-green">150</span></td>
-                <td>Nước suối Aquafina 500ml</td>
-                <td class="action-box">
-                    <i class="fa fa-edit edit"></i>
-                    <i class="fa fa-trash delete"></i>
-                </td>
-            </tr>
+  <table class="service-table">
+    <thead>
+      <tr>
+        <th>Tên dịch vụ</th>
+        <th>Danh mục</th>
+        <th>Giá</th>
+        <th>Đơn vị</th>
+        <th>Tồn kho</th>
+        <th>Mô tả</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody id="serviceTableBody">
+      <!-- rows rendered by JS -->
+    </tbody>
+  </table>
+</div>
 
-            <tr>
-                <td>Bia Tiger</td>
-                <td><span class="badge badge-blue">Đồ uống</span></td>
-                <td>20.000đ</td>
-                <td>Lon</td>
-                <td><span class="stock stock-green">80</span></td>
-                <td>Bia Tiger lon 330ml</td>
-                <td class="action-box">
-                    <i class="fa fa-edit edit"></i>
-                    <i class="fa fa-trash delete"></i>
-                </td>
-            </tr>
+<!-- Modal (Add / Edit) -->
+<div id="modal" class="modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="modalTitle">Thêm dịch vụ</h3>
+      <button id="closeModal" class="modal-close">&times;</button>
+    </div>
 
-            <tr>
-                <td>Snack Oishi</td>
-                <td><span class="badge badge-pink">Đồ ăn</span></td>
-                <td>15.000đ</td>
-                <td>Gói</td>
-                <td><span class="stock stock-green">60</span></td>
-                <td>Snack các loại</td>
-                <td class="action-box">
-                    <i class="fa fa-edit edit"></i>
-                    <i class="fa fa-trash delete"></i>
-                </td>
-            </tr>
+    <form id="formService" class="modal-form">
+      <input type="hidden" id="serviceId" />
 
-            <tr>
-                <td>Mì ly</td>
-                <td><span class="badge badge-pink">Đồ ăn</span></td>
-                <td>12.000đ</td>
-                <td>Ly</td>
-                <td><span class="stock stock-yellow">45</span></td>
-                <td>Mì ly Hảo Hảo</td>
-                <td class="action-box">
-                    <i class="fa fa-edit edit"></i>
-                    <i class="fa fa-trash delete"></i>
-                </td>
-            </tr>
+      <label>
+        Tên dịch vụ
+        <input id="fieldName" type="text" required />
+      </label>
 
-            <tr>
-                <td>Trái cây dĩa</td>
-                <td><span class="badge badge-pink">Đồ ăn</span></td>
-                <td>80.000đ</td>
-                <td>Dĩa</td>
-                <td><span class="stock stock-red">20</span></td>
-                <td>Trái cây tươi theo mùa</td>
-                <td class="action-box">
-                    <i class="fa fa-edit edit"></i>
-                    <i class="fa fa-trash delete"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+      <label>
+        Danh mục
+        <input id="fieldCategory" type="text" placeholder="Ví dụ: Đồ uống, Đồ ăn" required />
+      </label>
+
+      <label>
+        Giá (VNĐ)
+        <input id="fieldPrice" type="number" min="0" step="100" required />
+      </label>
+
+      <label>
+        Đơn vị
+        <input id="fieldUnit" type="text" placeholder="Chai / Lon / Gói / Dĩa" />
+      </label>
+
+      <label>
+        Tồn kho
+        <input id="fieldStock" type="number" min="0" step="1" required />
+      </label>
+
+      <label>
+        Mô tả
+        <textarea id="fieldDesc" rows="2"></textarea>
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" id="cancelBtn" class="btn btn-ghost">Hủy</button>
+        <button type="submit" id="saveBtn" class="btn btn-primary">Lưu</button>
+      </div>
+    </form>
+  </div>
 </div>

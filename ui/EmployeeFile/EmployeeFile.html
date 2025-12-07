@@ -2,34 +2,81 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý Hồ sơ Nhân viên</title>
+    <title>Quản lý nhân viên</title>
+    <link rel="stylesheet" href="EmployeeFile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 
 <body>
-<div class="page-container">
-    <div class="page-header">
-        <h2><i class="fa-solid fa-id-card"></i> Quản lý Hồ sơ Nhân viên</h2>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="employee-header">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm nhân viên...">
+
+        <select id="filterPosition">
+            <option value="all">Tất cả vị trí</option>
+            <option value="Quản lý">Quản lý</option>
+            <option value="Thu ngân">Thu ngân</option>
+            <option value="Phục vụ">Phục vụ</option>
+            <option value="Kỹ thuật">Kỹ thuật</option>
+        </select>
+
+        <button class="btn-add" onclick="openAddModal()">
+            <i class="fa-solid fa-plus"></i>
+            Thêm nhân viên
+        </button>
     </div>
 
-    <table class="data-table">
+    <!-- TABLE -->
+    <table class="table-employee" id="employeeTable">
         <thead>
             <tr>
-                <th>Mã NV</th>
                 <th>Tên nhân viên</th>
-                <th>Chức vụ</th>
-                <th>SĐT</th>
+                <th>Vị trí</th>
+                <th>Liên hệ</th>
                 <th>Lương</th>
+                <th>Ngày vào làm</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
             </tr>
         </thead>
-        <tbody id="employeeTableBody"></tbody>
+        <tbody id="employeeBody"></tbody>
     </table>
-    
-    <div class="toolbar">
-        <button id="btnAddEmployee" class="btn primary"><i class="fa-solid fa-user-plus"></i> Thêm nhân viên</button>
-        <button id="btnEditEmployee" class="btn secondary"><i class="fa-solid fa-user-pen"></i> Sửa</button>
-        <button id="btnDeleteEmployee" class="btn danger"><i class="fa-solid fa-user-xmark"></i> Xóa</button>
+
+</div>
+
+<!-- MODAL -->
+<div id="employeeModal" class="employee-modal" style="display:none;">
+    <div class="employee-modal-content">
+
+        <h3 id="modalTitle">Thêm nhân viên</h3>
+
+        <input type="text" id="nameInput" placeholder="Tên nhân viên">
+        
+        <select id="positionInput">
+            <option value="Quản lý">Quản lý</option>
+            <option value="Thu ngân">Thu ngân</option>
+            <option value="Phục vụ">Phục vụ</option>
+            <option value="Kỹ thuật">Kỹ thuật</option>
+        </select>
+
+        <input type="text" id="phoneInput" placeholder="Số điện thoại">
+        <input type="text" id="emailInput" placeholder="Email">
+        <input type="number" id="salaryInput" placeholder="Lương">
+        <input type="date" id="dateInput">
+
+        <select id="statusInput">
+            <option value="Đang làm">Đang làm</option>
+            <option value="Tạm nghỉ">Tạm nghỉ</option>
+        </select>
+
+        <button onclick="saveEmployee()">Lưu</button>
     </div>
 </div>
+
+<script src="EmployeeFile.js"></script>
+
 </body>
 </html>

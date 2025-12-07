@@ -1,129 +1,151 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phần mềm quản lý Karaoke</title>
-  <link rel="stylesheet" href="ui.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phần mềm quản lý Karaoke</title>
+
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 
 <body>
-  <div class="sidebar">
-    <div class="logo">
-      <img src="file:/D:/VSCode/images/logo.png" alt="Logo">
-    </div>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="file:/D:/VSCode/images/logo.png" alt="Logo">
+    </div>
 
-    <ul class="menu">
-    <li><button data-page="Home" class="active"><i class="fa-solid fa-house"></i>Trang chủ</button></li>
-      <li><button data-page="Service"><i class="fa-solid fa-shop"></i>Quản lý dịch vụ</button></li>
-      <li><button data-page="Customer"><i class="fa-solid fa-users"></i>Quản lý khách hàng</button></li>
-      <li><button data-page="Room"><i class="fa-solid fa-calendar-days"></i>Quản lý phòng</button></li>
-      <li><button data-page="Account"><i class="fa-solid fa-circle-user"></i>Quản lý tài khoản</button></li>
-      <li><button data-page="EmployeeFile"><i class="fa-solid fa-id-card"></i>Quản lý hồ sơ nhân viên</button></li>
-      <li><button data-page="Statistics"><i class="fa-solid fa-chart-simple"></i>Thống kê</button></li>
-      <li><button data-page="Exit"><i class="fa-solid fa-right-to-bracket"></i>Đăng xuất</button></li>
-    </ul>
-  </div>
+    <ul class="menu">
+      <li><button data-page="Home" class="active"><i class="fa-solid fa-house"></i>Trang chủ</button></li>
+      <li><button data-page="Service"><i class="fa-solid fa-shop"></i>Quản lý dịch vụ</button></li>
+      <li><button data-page="Customer"><i class="fa-solid fa-users"></i>Quản lý khách hàng</button></li>
+      <li><button data-page="Room"><i class="fa-solid fa-calendar-days"></i>Quản lý phòng</button></li>
+      <li><button data-page="Account"><i class="fa-solid fa-circle-user"></i>Quản lý tài khoản</button></li>
+      <li><button data-page="EmployeeFile"><i class="fa-solid fa-id-card"></i>Quản lý hồ sơ nhân viên</button></li>
+      <li><button data-page="Statistics"><i class="fa-solid fa-chart-simple"></i>Thống kê</button></li>
+      <li><button data-page="Exit"><i class="fa-solid fa-right-to-bracket"></i>Đăng xuất</button></li>
+    </ul>
+  </div>
 
-  <div class="main-content">
-    <div class="content" id="content">
-      <h2>HỆ THỐNG QUẢN LÝ QUÁN KARAOKE</h2>
-    </div>
-  </div>
+  <!-- ================== TOP HEADER ================== -->
+  <div class="top-header">
+    <div class="date" id="currentDate"></div>
 
-  <script>
-    const buttons = document.querySelectorAll('.menu button');
-    const content = document.getElementById('content');
-    let currentCssLink = null;
-    let currentJsScript = null;
+    <div class="top-right">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Tìm kiếm...">
+      </div>
+
+      <i class="fa-regular fa-bell bell"></i>
+
+      <div class="profile">
+        <div class="text">
+          <span class="name">Nguyễn Văn A</span>
+          <span class="role">Quản lý</span>
+        </div>
+        <div class="avatar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================== MAIN CONTENT ================== -->
+  <div class="main-content">
+    <div class="content" id="content">
+      <h2>HỆ THỐNG QUẢN LÝ QUÁN KARAOKE</h2>
+    </div>
+  </div>
+
+  <!-- ================== SCRIPT ================== -->
+  <script>
+    const buttons = document.querySelectorAll('.menu button');
+    const content = document.getElementById('content');
+    let currentCssLink = null;
+    let currentJsScript = null;
     let currentPage = 'Home';
 
-    // Hàm TẢI NỘI DUNG MỚI (Xử lý việc nạp lại script và CSS)
-    function loadContentPage(page, folder) {
-        buttons.forEach(b => b.classList.remove("active"));
-        
-        const folderPath = folder || page; 
-        const pagePath = `${folderPath}/${page}.html`; 
+    // ========== AUTO DATE ==========
+    function loadCurrentDate() {
+      const dateEl = document.getElementById("currentDate");
+      const now = new Date();
 
-        // 1. Xóa CSS và JS cũ khỏi thẻ <head> và <body>
-        if (currentCssLink) currentCssLink.remove();
-        if (currentJsScript) currentJsScript.remove();
-        
-        content.innerHTML = "<p>Đang tải nội dung...</p>";
-        currentPage = page;
+      const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+      const dayName = days[now.getDay()];
 
-        try {
-            // 2. Lấy nội dung HTML từ Java (Bridge)
-            const html = window.Bridge.loadHtmlContent(pagePath);
-            content.innerHTML = html;
+      const day = now.getDate();
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
 
-            // 3. Nạp CSS riêng của trang
-            const cssPath = `${folderPath}/${page}.css`;
-            const cssLink = document.createElement("link");
-            cssLink.rel = "stylesheet";
-            cssLink.href = cssPath;
-            document.head.appendChild(cssLink);
-            currentCssLink = cssLink;
-
-            // 4. Nạp JS riêng của trang
-            const jsPath = `${folderPath}/${page}.js`;
-            const jsScript = document.createElement("script");
-            jsScript.src = jsPath;
-            jsScript.onload = () => {
-                console.log(`✅ ${page}.js loaded`);
-                // ⚠️ KHỞI CHẠY LẠI LOGIC KHI SCRIPT CỦA TRANG ROOM ĐƯỢC NẠP LẠI
-                if (window.initRoomPage && page === 'Room') {
-                    window.initRoomPage(); 
-                }
-            };
-            jsScript.onerror = () => console.error(`❌ Không thể load ${page}.js`);
-            document.body.appendChild(jsScript); 
-            currentJsScript = jsScript;
-        } catch (err) {
-            content.innerHTML = `<p style="color:red">Trang đang phát triển hoặc lỗi: ${err.message}</p>`;
-            console.error(`Bridge error khi tải ${pagePath}:`, err);
-        }
+      dateEl.textContent = `${dayName}, ${day} tháng ${month}, ${year}`;
     }
-    window.loadContentPage = loadContentPage; 
+    loadCurrentDate();
 
-    // Xử lý click menu bên trái
+    // ========== LOAD PAGE ==========
+    function loadContentPage(page, folder) {
+      buttons.forEach(b => b.classList.remove("active"));
+
+      const folderPath = folder || page;
+      const pagePath = `${folderPath}/${page}.html`;
+
+      if (currentCssLink) currentCssLink.remove();
+      if (currentJsScript) currentJsScript.remove();
+
+      content.innerHTML = "<p>Đang tải nội dung...</p>";
+      currentPage = page;
+
+      try {
+        const html = window.Bridge.loadHtmlContent(pagePath);
+        content.innerHTML = html;
+
+        const cssPath = `${folderPath}/${page}.css`;
+        const cssLink = document.createElement("link");
+        cssLink.rel = "stylesheet";
+        cssLink.href = cssPath;
+        document.head.appendChild(cssLink);
+        currentCssLink = cssLink;
+
+        const jsPath = `${folderPath}/${page}.js`;
+        const jsScript = document.createElement("script");
+        jsScript.src = jsPath;
+        jsScript.onload = () => {
+          if (window.initRoomPage && page === 'Room') {
+            window.initRoomPage();
+          }
+        };
+        document.body.appendChild(jsScript);
+        currentJsScript = jsScript;
+
+      } catch (err) {
+        content.innerHTML = `<p style="color:red">Trang đang phát triển hoặc lỗi: ${err.message}</p>`;
+        console.error(err);
+      }
+    }
+    window.loadContentPage = loadContentPage;
+
+    // MENU EVENT
     buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            const page = button.dataset.page;
+      button.addEventListener('click', () => {
+        const page = button.dataset.page;
 
-            buttons.forEach(b => b.classList.remove("active"));
-            button.classList.add("active");
+        buttons.forEach(b => b.classList.remove("active"));
+        button.classList.add("active");
 
-            if (page === "Exit") {
-                content.innerHTML = "<h2>Đã đăng xuất!</h2>";
-                return;
-            }
-            
-            loadContentPage(page);
-        });
+        if (page === "Exit") {
+          content.innerHTML = "<h2>Đã đăng xuất!</h2>";
+          return;
+        }
+        loadContentPage(page);
+      });
     });
 
-    // Hàm toàn cục: Dùng cho nút Quay lại (backToHome)
-    function backToHome() {
-        buttons.forEach(b => b.classList.remove("active"));
-        const roomButton = document.querySelector('.menu button[data-page="Room"]');
-        if (roomButton) {
-            roomButton.classList.add("active");
-            // Tải lại trang Room
-            loadContentPage('Room', 'Room'); 
-        } else {
-            content.innerHTML = "<h2>HỆ THỐNG QUẢN LÝ QUÁN KARAOKE</h2>";
-        }
-    }
+    window.backToHome = function () {
+      const roomButton = document.querySelector('.menu button[data-page="Room"]');
+      if (roomButton) {
+        roomButton.classList.add("active");
+        loadContentPage("Room");
+      }
+    };
+  </script>
 
-    window.backToHome = backToHome;
-    
-    // Tải trang Room mặc định khi chương trình khởi động
-   // document.addEventListener('DOMContentLoaded', () => {
-      //  const roomButton = document.querySelector('.menu button[data-page="Room"]');
-       // if(roomButton) roomButton.click(); 
-   // });
-</script>
 </body>
 </html>
