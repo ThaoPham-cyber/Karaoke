@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý hóa đơn</title>
+    <link rel="stylesheet" href="Invoice.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+<div class="container">
+
+    <div class="top-bar">
+        <div class="search-box">
+            <i class="fa fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Tìm kiếm hóa đơn...">
+        </div>
+
+        <select id="statusFilter">
+            <option value="all">Tất cả trạng thái</option>
+            <option value="paid">Đã thanh toán</option>
+            <option value="pending">Chờ thanh toán</option>
+        </select>
+
+        <button class="btn-create"><i class="fa fa-plus"></i> Tạo hóa đơn</button>
+    </div>
+
+    <div class="invoice-table">
+        <table>
+            <thead>
+            <tr>
+                <th>Mã HĐ</th>
+                <th>Khách hàng</th>
+                <th>Phòng</th>
+                <th>Thời gian</th>
+                <th>Tiền phòng</th>
+                <th>Tiền DV</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+            </thead>
+
+            <tbody id="invoiceBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="Invoice.js"></script>
+</body>
+</html>

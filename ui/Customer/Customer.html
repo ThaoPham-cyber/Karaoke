@@ -1,34 +1,49 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Quản lý Khách hàng</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-</head>
+<div class="customer-container">
+    <div class="header">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm khách hàng...">
+        <select id="filterType">
+            <option value="all">Tất cả loại</option>
+            <option value="VIP">VIP</option>
+            <option value="Standard">Standard</option>
+            <option value="New">New</option>
+        </select>
 
-<body>
-<div class="page-container">
-    <div class="page-header">
-        <h2><i class="fa-solid fa-users"></i> Quản lý khách hàng</h2>
+        <button id="btnAdd" class="btn-add">+ Thêm khách hàng</button>
     </div>
 
-    <table class="data-table">
+    <table>
         <thead>
             <tr>
-                <th>Mã KH</th>
-                <th>Tên KH</th>
-                <th>SĐT</th>
-                <th>Điểm tích lũy</th>
+                <th>Tên khách hàng</th>
+                <th>Liên hệ</th>
+                <th>Loại thành viên</th>
+                <th>Số lần đến</th>
+                <th>Tổng chi tiêu</th>
+                <th>Ngày đăng ký</th>
+                <th>Thao tác</th>
             </tr>
         </thead>
-        <tbody id="customerTableBody"></tbody>
+
+        <tbody id="customerTable"></tbody>
     </table>
-    
-    <div class="toolbar footer-toolbar">
-        <button id="btnAddCustomer" class="btn primary"><i class="fa-solid fa-user-plus"></i> Thêm khách hàng</button>
-        <button id="btnEditCustomer" class="btn secondary"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
-        <button id="btnDeleteCustomer" class="btn danger"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+</div>
+
+<!-- Popup -->
+<div id="popup" class="popup hidden">
+    <div class="popup-content">
+        <h3 id="popupTitle"></h3>
+
+        <input id="pName" placeholder="Tên khách hàng">
+        <input id="pPhone" placeholder="SĐT">
+        <input id="pEmail" placeholder="Email">
+
+        <select id="pType">
+            <option value="VIP">VIP</option>
+            <option value="Standard">Standard</option>
+            <option value="New">New</option>
+        </select>
+
+        <button id="btnSave">Lưu</button>
+        <button id="btnClose">Đóng</button>
     </div>
 </div>
-</body>
-</html>
