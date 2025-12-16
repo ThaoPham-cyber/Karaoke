@@ -35,7 +35,7 @@ public class Main extends Application {
             }
         });
 
-        File file = new File("D:/VSCode/ui/UI.html");
+        File file = new File("D:/VSCode/Receptionist/UI.html");
         engine.load(file.toURI().toString());
 
         BorderPane root = new BorderPane(webView);

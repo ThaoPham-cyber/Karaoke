@@ -1,0 +1,186 @@
+<!-- File: RoomBooking.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Room Booking</title>
+
+  <link rel="stylesheet" href="../shared/ui-fonts.css"> <!-- nếu có -->
+  <link rel="stylesheet" href="RoomBooking.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+
+</head>
+<body>
+  <div class="room-page">
+
+    <!-- SUMMARY CARDS -->
+    <div class="summary-box">
+      <div class="summary-item available">
+        <div class="summary-top">
+          <h4>Phòng trống</h4>
+          <i class="fa-solid fa-door-open"></i>
+        </div>
+        <div class="summary-count" id="sumAvailable">0 phòng</div>
+      </div>
+
+      <div class="summary-item using">
+        <div class="summary-top">
+          <h4>Đang sử dụng</h4>
+          <i class="fa-solid fa-clock"></i>
+        </div>
+        <div class="summary-count" id="sumUsing">0 phòng</div>
+      </div>
+
+      <div class="summary-item maintenance">
+        <div class="summary-top">
+          <h4>Bảo trì</h4>
+          <i class="fa-solid fa-toolbox"></i>
+        </div>
+        <div class="summary-count" id="sumMaintenance">0 phòng</div>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="room-controls">
+      <input id="searchRoom" class="search-box" type="text" placeholder="Tìm kiếm phòng..." />
+      <select id="filterStatus" class="filter-status">
+        <option value="__all">Tất cả trạng thái</option>
+        <option value="available">Còn trống</option>
+        <option value="using">Đang sử dụng</option>
+        <option value="maintenance">Bảo trì</option>
+      </select>
+      <button id="addRoomBtn" class="btn-add"><i class="fa-solid fa-plus"></i> Thêm phòng</button>
+    </div>
+
+    <!-- ROOM GRID -->
+    <div id="roomList" class="room-list"></div>
+  </div>
+
+  <!-- MODAL: Add/Edit Room -->
+  <div id="roomModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="roomModalTitle">Thêm phòng</h3>
+        <button id="closeRoomModal" class="modal-close">&times;</button>
+      </div>
+
+      <form id="roomForm" class="modal-form">
+        <input type="hidden" id="roomId" />
+
+        <label>Tên phòng
+          <input id="fieldRoomName" type="text" required />
+        </label>
+
+        <label>Loại phòng
+          <select id="fieldRoomType">
+            <option>VIP</option>
+            <option>Standard</option>
+            <option>Couple</option>
+            <option>Deluxe</option>
+          </select>
+        </label>
+
+        <label>Sức chứa
+          <input id="fieldCapacity" type="number" min="1" value="4" required />
+        </label>
+
+        <label>Giá (VNĐ/giờ)
+          <input id="fieldPrice" type="number" min="0" value="100000" step="1000" required />
+        </label>
+
+        <label>Trạng thái
+          <select id="fieldStatus">
+            <option value="available">Còn trống</option>
+            <option value="using">Đang sử dụng</option>
+            <option value="maintenance">Bảo trì</option>
+          </select>
+        </label>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelRoom" class="btn-secondary">Hủy</button>
+          <button type="submit" class="btn-primary">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Booking (for empty rooms) -->
+  <div id="bookingModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <h3 id="bookingTitle">Đặt phòng</h3>
+        <button id="closeBookingModal" class="modal-close">&times;</button>
+      </div>
+
+      <form id="bookingForm" class="modal-form">
+        <div class="room-info-panel" id="bookingRoomInfo"></div>
+
+        <label>Tên khách hàng *
+          <input id="bookCustomerName" type="text" required />
+        </label>
+
+        <label>Số điện thoại *
+          <input id="bookPhone" type="tel" required />
+        </label>
+
+        <label>Số người
+          <input id="bookPersons" type="number" min="1" value="2" />
+        </label>
+
+        <label>Giờ bắt đầu
+          <input id="bookStartTime" type="time" value="" />
+        </label>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelBooking" class="btn-secondary">Hủy</button>
+          <button type="submit" class="btn-primary">Xác nhận đặt phòng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Usage Details (for rooms in use) -->
+  <div id="usageModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <h3 id="usageTitle">Chi tiết sử dụng</h3>
+        <button id="closeUsageModal" class="modal-close">&times;</button>
+      </div>
+
+      <div class="usage-body">
+        <div class="usage-top" id="usageTop"></div>
+
+        <div class="usage-services">
+          <h4>Dịch vụ đã gọi</h4>
+          <div id="ordersList"></div>
+
+          <div class="add-service-row">
+            <select id="serviceSelect"></select>
+            <input id="serviceQty" type="number" min="1" value="1" />
+            <button id="addServiceBtn" class="btn-add-service">+ Thêm món</button>
+          </div>
+        </div>
+
+        <div class="usage-footer">
+          <div class="usage-totals">
+            <div>Tổng tiền phòng: <span id="totalRoomFee">0đ</span></div>
+            <div>Tổng tiền dịch vụ: <span id="totalServiceFee">0đ</span></div>
+            <div class="grand">Tổng cộng: <span id="grandTotal">0đ</span></div>
+          </div>
+
+          <div class="modal-actions">
+            <button id="closeUsageDone" class="btn-secondary">Đóng</button>
+            <button id="checkoutBtn" class="btn-primary">Thanh toán</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="RoomBooking.js"></script>
+</body>
+</html>

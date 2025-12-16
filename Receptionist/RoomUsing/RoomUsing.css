@@ -1,0 +1,256 @@
+/* File: RoomUsing.css - Tinh chỉnh icon và bố cục */
+
+:root {
+    /* Màu sắc chủ đạo */
+    --pink: #e91e63;
+    --pink-light: #fce4ec;
+    --gray-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: #f1f5f9;
+    --muted-text: #64748b;
+
+    /* Màu cho Stat Cards */
+    --blue: #3b82f6;
+    --blue-bg-light: #eff6ff;
+    --green: #10b981;
+    --green-bg-light: #f0fdf4;
+    --orange: #f97316;
+    --orange-bg-light: #fff7ed;
+    --yellow: #f59e0b;
+    --yellow-bg-light: #fefce8;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--gray-bg);
+    margin: 0;
+    padding: 20px;
+    color: #1e293b;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- 1. Stat Cards --- (Giữ nguyên) */
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 25px;
+}
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.stat-card i { font-size: 1.5rem; margin-bottom: 10px; }
+.stat-card p { font-size: 0.85rem; color: var(--muted-text); margin: 0; }
+.stat-card h3 { font-size: 1.2rem; font-weight: 700; margin-top: 5px; }
+.stat-card.blue { background-color: var(--blue-bg-light); color: var(--blue); }
+.stat-card.green { background-color: var(--green-bg-light); color: var(--green); }
+.stat-card.orange { background-color: var(--orange-bg-light); color: var(--orange); }
+.stat-card.yellow { background-color: var(--yellow-bg-light); color: var(--yellow); }
+
+
+/* --- 2. Room Cards --- */
+.room-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.room-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.room-card.ready { border: 2px solid var(--yellow); }
+
+/* --- Phần Header & Info (Luôn hiển thị) --- */
+.room-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px 24px 0; /* Giảm padding bottom vì room-info đã có padding */
+}
+
+.room-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer; /* Click vào phần này để mở/đóng */
+}
+
+.room-status-group {
+    display: flex;
+    align-items: center;
+}
+
+.room-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-right: 10px;
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 10px;
+}
+.badge.using { background: #dcfce7; color: #15803d; }
+.badge.pending { background: #fee2e2; color: #b91c1c; }
+.badge.wait { background: #fef3c7; color: #b45309; }
+
+.room-meta-row {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--muted-text);
+    /* Giảm khoảng cách giữa các phần tử meta */
+    gap: 8px; 
+}
+.room-meta-row i {
+    margin-right: 2px;
+    font-size: 1em; /* Đảm bảo icon không quá lớn */
+}
+.room-meta-row span {
+    margin-right: 8px;
+}
+
+/* Mũi tên */
+.arrow {
+    font-size: 1.2rem;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: transform 0.3s;
+    padding: 5px;
+    margin-left: auto; /* Đẩy mũi tên sang phải nếu cần */
+}
+.arrow.open { transform: rotate(180deg); }
+
+
+/* Thông tin giờ và chi phí (Room Info) */
+.room-info {
+    display: grid;
+    /* 4 cột chính: Giờ bắt đầu/đã dùng, Tiền phòng, Tiền dịch vụ, Tổng */
+    grid-template-columns: 2fr 1.5fr 1.5fr 1fr; 
+    align-items: center;
+    padding: 10px 24px 16px;
+    font-size: 0.9rem;
+    gap: 15px;
+}
+
+.room-info > div {
+    display: flex;
+    flex-direction: column;
+    color: #1e293b;
+}
+
+.room-info i {
+    color: var(--muted-text);
+    margin-right: 5px;
+}
+/* Hiển thị thông tin chính (Bắt đầu, Tiền phòng, Tiền dịch vụ) */
+.room-info > div > span {
+    font-size: 0.85em;
+    color: var(--muted-text);
+}
+.room-info .used-time {
+    font-weight: 600;
+    color: var(--pink); /* Đã dùng đậm hơn */
+}
+
+
+.room-info .total {
+    font-weight: 700;
+    color: var(--pink);
+    font-size: 1.05rem;
+    text-align: right;
+    display: block; /* Đảm bảo Total nằm gọn */
+}
+
+/* Nút Thêm Món */
+.add-btn {
+    background: var(--pink);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.add-btn:hover { background: #d11b7d; }
+
+/* --- Phần Mở Rộng --- */
+.expand {
+    display: none;
+    padding: 20px 24px;
+    border-top: 1px solid var(--border-color);
+    background: #fcfcfc;
+}
+
+.expand.show { display: block; }
+
+/* Các box tóm tắt sử dụng */
+h4 { font-weight: 600; font-size: 1rem; margin-top: 0; margin-bottom: 15px; }
+
+.summary-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.box {
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.box i { font-size: 1.1rem; margin-right: 8px; }
+.box strong { font-size: 1.1em; }
+.box span { font-weight: 400; font-size: 0.85em; display: block; }
+
+/* Màu sắc cho box tóm tắt */
+.box.time { background: var(--blue-bg-light); color: var(--blue); }
+.box.fee { background: var(--pink-light); color: var(--pink); }
+.box.service { background: #fdf2f8; color: #db2777; }
+
+/* Chi tiết dịch vụ */
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+.service-item:last-child { border-bottom: none; }
+
+.service-item strong { color: #1e293b; }
+.service-item span {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted-text);
+}
+.service-item .status {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+.service-item .status.done { background: #dcfce7; color: #15803d; }
+.service-item .status.wait { background: #ffedd5; color: #c2410c; }

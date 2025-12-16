@@ -1,0 +1,174 @@
+/* File: RoomBooking.css - Modern White + Purple */
+
+/* base */
+:root{
+  --purple:#000000;
+  --purple-600:#f92727;
+  --muted:#ff0000;
+  --card-shadow: 0 6px 18px rgba(15,23,42,0.06);
+  --radius:12px;
+  --text:#000000;
+  --accent:#fa1212;
+}
+
+
+.modal-backdrop{
+  background: rgba(112, 233, 240, 0.8) !important;
+}
+
+.stat-card{
+background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 6px solid #4de2f3;
+}
+.stat-empty{
+  border-color: #55dd4c;
+
+}
+.stat-using{
+  border-color: hwb(3 33% 2% / 0.852);
+}
+.stat-maintenance{
+  border-color: #efe444;
+}
+
+*{box-sizing:border-box}
+body{font-family: "Segoe UI", Roboto, Arial; color:var(--text); background:#f5f6f8; margin:0; padding:20px;}
+
+/* SUMMARY */
+.summary-box{display:flex; gap:18px; margin-bottom:20px}
+.summary-item{
+  flex:1;
+  border-radius:var(--radius);
+  padding:18px;
+ box-shadow:var(--card-shadow);
+  transition:transform .16s ease, box-shadow .16s ease;
+}
+.summary-box summary-item .status-available{
+  background: #86d5dd;
+  border-radius: color(#8284f4);
+  color: #6366f1;
+}
+.summary-item.available{
+  background: #57f546c8;
+  border-radius: color(#47c47a);
+ 
+}
+.summary-item.using{
+  background-color: #f87f7f;
+  border-radius: color(#55dd4c);
+}
+.summary-item.maintenance{
+  background-color: #e0f86ad7;
+}
+.summary-item:hover{transform:translateY(-6px); box-shadow:0 10px 30px rgba(15,23,42,0.08)}
+.summary-top{display:flex; justify-content:space-between; align-items:center}
+.summary-top h4{margin:0; font-size:15px; color:#333}
+.summary-top i{font-size:22px; color:var(--purple)}
+.summary-count{margin-top:10px; font-weight:600; font-size:18px; color:#1f2937}
+
+/* controls */
+.room-controls.btn-add{background: #10b981 !important;}
+.room-controls{display:flex; gap:12px; align-items:center; margin-bottom:16px}
+.search-box{flex:1; padding:12px 14px; border-radius:10px; border:1px solid #e6e6ee; background:white}
+.filter-status{padding:10px 12px; border-radius:10px; border:1px solid #e6e6ee; background:white}
+.btn-add{background:#80f6f8; color:white; padding:10px 16px; border-radius:10px; border:none; cursor:pointer; box-shadow:0 6px 18px rgba(109,40,217,0.12)}
+.btn-add:hover{background:var(--purple-600)}
+
+/* room grid */
+.room-list{display:grid;
+ grid-template-columns:repeat(auto-fill,
+ minmax(280px,1fr));
+ gap:18px;
+  margin-top:10px}
+.room-card{
+ background:white;
+ border-radius:14px;
+ padding:18px;
+ box-shadow:var(--card-shadow);
+ position:relative; display:flex;
+ flex-direction:column;
+ justify-content:space-between;
+ transition:transform .14s ease;
+}
+.room-card:hover{transform:translateY(-6px)}
+.room-card .top{
+  margin-bottom:8px
+}
+.room-card h3{margin:0 0 6px 0; font-size:18px}
+.room-card .type{color:#ffffff; margin-bottom:10px}
+
+/* info */
+.room-info small{display:block; color:#6b7280; margin-top:6px}
+.room-card .room-meta{font-size:13px; color:#4b5563; margin-bottom:10px}
+
+/* card border color */
+.room-card.red{border-top:7px solid #fa7b7b}
+.room-card.yellow{border-top:7px solid #e9b949}
+.room-card.green{border-top:7px solid #47c47a}
+
+/* status badge & actions are placed at bottom stacked */
+.status-badge{display:inline-block; padding:6px 10px; border-radius:8px; color:white; font-weight:600; font-size:13px}
+.status-available{background:#43f867}
+.status-using{background:#f56161}
+.status-maintenance{background:#f59e0b}
+
+/* actions row (aligned horizontally, below status) */
+.card-bottom{display:flex; justify-content:space-between; align-items:center; margin-top:12px; gap:12px}
+.actions{display:flex; gap:10px}
+.actions button{border:none; padding:10px 12px; border-radius:12px; cursor:pointer; display:flex; gap:8px; align-items:center; font-weight:600}
+.btn-edit{background:#eef2ff; color:#1e3a8a}
+.btn-customer{background:#d1fae5; color:#064e3b}
+.btn-delete{background:#fff1f2; color:#9f1239}
+
+/* modal base */
+.modal{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:60}
+.modal.hidden{display:none}
+.modal-backdrop{position:absolute; inset:0; background:rgba(15,23,42,0.36)}
+.modal-card{position:relative; background:white; border-radius:14px; width:460px; max-width:94%; padding:18px; box-shadow:0 20px 50px rgba(2,6,23,0.12); transform:translateY(6px); animation:pop .18s ease both}
+.modal-card.wide{width:760px}
+
+/* pop animation */
+@keyframes pop{from{opacity:0; transform:translateY(10px) scale(.99)} to {opacity:1; transform:translateY(0) scale(1)}}
+
+.modal-header{display:flex; background: #ffffff !important; justify-content:space-between; align-items:center; margin-bottom:12px}
+.modal-close{background:transparent; border:none; font-size:22px; cursor:pointer}
+.modal-form{display:flex; flex-direction:column; gap:12px}
+.modal-form label{display:flex; flex-direction:column; gap:6px; font-weight:600; color:#374151}
+.modal-form input, .modal-form select{padding:10px 12px; border-radius:10px; border:1px solid #e6e6ee; background:white}
+.modal-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:6px}
+
+.btn-primary{background:var(--accent); color:white; border:none; padding:10px 16px; border-radius:10px; cursor:pointer}
+.btn-secondary{background:#f3f4f6; border:none; padding:10px 14px; border-radius:10px; cursor:pointer}
+
+/* booking info panel */
+.room-info-panel{background:#fff4ff; border:1px solid #f0e6ff; padding:12px; border-radius:10px; color:#6b21a8}
+
+/* usage modal layout */
+.usage-body{display:flex; flex-direction:column; gap:12px}
+.usage-top{display:flex; justify-content:space-between; gap:12px; align-items:center}
+.usage-top .left{flex:1}
+.usage-top .right{text-align:right}
+.usage-services{background:#fff; border-radius:10px; padding:10px; border:1px solid #f3f4f6}
+#ordersList{display:flex; flex-direction:column; gap:8px; margin-bottom:10px}
+.order-item{display:flex; justify-content:space-between; gap:8px; padding:10px; border-radius:10px; background:#fbfbfd; border:1px solid #f1f1f7}
+.add-service-row{display:flex; gap:8px; margin-top:8px}
+.add-service-row select, .add-service-row input{padding:8px 10px; border-radius:8px; border:1px solid #e6e6ee}
+.btn-add-service{background:var(--purple); color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer}
+
+/* totals */
+.usage-footer{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:10px}
+.usage-totals{font-weight:600}
+.usage-totals .grand{font-size:18px; color:var(--purple); margin-top:4px}
+
+/* responsive */
+@media (max-width:760px){
+  .modal-card.wide{width:94%}
+  .room-list{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+}
+/* Force-style modal header title (put at END of RoomBooking.css) */

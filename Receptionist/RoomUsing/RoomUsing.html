@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng đang dùng</title>
+    <link rel="stylesheet" href="RoomUsing.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="summary-stats">
+            <div class="stat-card blue">
+                <i class="fa-solid fa-house-chimney-user"></i>
+                <p>Tổng phòng đang dùng</p>
+                <h3 id="statTotalRooms">5 phòng</h3>
+            </div>
+            <div class="stat-card green">
+                <i class="fa-solid fa-credit-card"></i>
+                <p>Tổng doanh thu tạm tính</p>
+                <h3 id="statRevenue">1.725.000đ</h3>
+            </div>
+            <div class="stat-card orange">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <p>Đơn hàng chờ phục vụ</p>
+                <h3 id="statPendingOrders">2 đơn</h3>
+            </div>
+            <div class="stat-card yellow">
+                <i class="fa-solid fa-clock"></i>
+                <p>Sẵn sàng thanh toán</p>
+                <h3 id="statReadyToPay">1 phòng</h3>
+            </div>
+        </div>
+
+        <div id="roomContainer" class="room-list"></div>
+    </div>
+
+    <script src="RoomUsing.js"></script> 
+</body>
+</html>

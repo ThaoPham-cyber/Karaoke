@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phần mềm quản lý Karaoke</title>
+
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="file:/D:/VSCode/images/logo.png" alt="Logo">
+    </div>
+
+    <ul class="menu">
+      <li><button data-page="Home" class="active"><i class="fa-solid fa-house"></i>Trang chủ</button></li>
+      <li><button data-page="RoomBooking"><i class="fa-solid fa-door-open"></i>Đặt phòng</button></li>
+      <li><button data-page="RoomUsing"><i class="fa-regular fa-clock"></i></i>Phòng đang sử dụng</button></li>
+      <li><button data-page="FoodBooking"><i class="fa-solid fa-cart-shopping"></i>Đặt món</button></li>
+      <li><button data-page="Food"><i class="fa-solid fa-bars"></i></i>Thực Đơn</button></li>
+      <li><button data-page="Bill"><i class="fa-brands fa-amazon-pay"></i></i>Thanh Toán</button></li>
+    </ul>
+  </div>
+
+  <!-- ================== TOP HEADER ================== -->
+  <div class="top-header">
+    <div class="date" id="currentDate"></div>
+
+    <div class="top-right">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Tìm kiếm...">
+      </div>
+
+      <i class="fa-regular fa-bell bell"></i>
+
+      <div class="profile">
+        <div class="text">
+          <span class="name">Nguyễn Văn A</span>
+          <span class="role">Quản lý</span>
+        </div>
+        <div class="avatar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================== MAIN CONTENT ================== -->
+  <div class="main-content">
+    <div class="content" id="content">
+      <h2>HỆ THỐNG QUẢN LÝ QUÁN KARAOKE</h2>
+    </div>
+  </div>
+
+  <!-- ================== SCRIPT ================== -->
+  <script>
+    const buttons = document.querySelectorAll('.menu button');
+    const content = document.getElementById('content');
+    let currentCssLink = null;
+    let currentJsScript = null;
+    let currentPage = 'Home';
+
+    // ========== AUTO DATE ==========
+    function loadCurrentDate() {
+      const dateEl = document.getElementById("currentDate");
+      const now = new Date();
+
+      const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+      const dayName = days[now.getDay()];
+
+      const day = now.getDate();
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
+
+      dateEl.textContent = `${dayName}, ${day} tháng ${month}, ${year}`;
+    }
+    loadCurrentDate();
+
+    // ========== LOAD PAGE ==========
+    function loadContentPage(page, folder) {
+      buttons.forEach(b => b.classList.remove("active"));
+
+      const folderPath = folder || page;
+      const pagePath = `${folderPath}/${page}.html`;
+
+      if (currentCssLink) currentCssLink.remove();
+      if (currentJsScript) currentJsScript.remove();
+
+      content.innerHTML = "<p>Đang tải nội dung...</p>";
+      currentPage = page;
+
+      try {
+        const html = window.Bridge.loadHtmlContent(pagePath);
+        content.innerHTML = html;
+
+        const cssPath = `${folderPath}/${page}.css`;
+        const cssLink = document.createElement("link");
+        cssLink.rel = "stylesheet";
+        cssLink.href = cssPath;
+        document.head.appendChild(cssLink);
+        currentCssLink = cssLink;
+
+        const jsPath = `${folderPath}/${page}.js`;
+        const jsScript = document.createElement("script");
+        jsScript.src = jsPath;
+        jsScript.onload = () => {
+          if (window.initRoomPage && page === 'RoomBooking') {
+            window.initRoomPage();
+          }
+        };
+        document.body.appendChild(jsScript);
+        currentJsScript = jsScript;
+
+      } catch (err) {
+        content.innerHTML = `<p style="color:red">Trang đang phát triển hoặc lỗi: ${err.message}</p>`;
+        console.error(err);
+      }
+    }
+    window.loadContentPage = loadContentPage;
+
+    // MENU EVENT
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const page = button.dataset.page;
+
+        buttons.forEach(b => b.classList.remove("active"));
+        button.classList.add("active");
+
+        if (page === "Exit") {
+          content.innerHTML = "<h2>Đã đăng xuất!</h2>";
+          return;
+        }
+        loadContentPage(page);
+      });
+    });
+
+    window.backToHome = function () {
+      const roomButton = document.querySelector('.menu button[data-page="RoomBooking"]');
+      if (roomButton) {
+        roomButton.classList.add("active");
+        loadContentPage("Room");
+      }
+    };
+  </script>
+
+</body>
+</html>

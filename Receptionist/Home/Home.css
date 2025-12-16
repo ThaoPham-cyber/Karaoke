@@ -1,0 +1,122 @@
+:root{
+  --pink:#e91e8f;
+  --orange:#fb923c;
+  --blue:#3b82f6;
+  --purple:#8b5cf6;
+  --green:#22c55e;
+  --red:#ef4444;
+  --card:#fff;
+  --bg:#f5f7fb;
+  --radius:14px;
+}
+
+body{
+  margin:0;
+  font-family:Segoe UI, Roboto, sans-serif;
+  background:var(--bg);
+}
+
+.home-page{
+  width:95%;
+  max-width:1300px;
+  margin:24px auto;
+}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
+  margin-bottom:20px;
+}
+
+.card-title{margin-bottom:14px}
+
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+  padding-bottom:10px;
+  margin-bottom:12px;
+}
+
+/* QUICK ACTIONS */
+.quick-actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+
+.qa-item{
+  border-radius:14px;
+  padding:26px 0;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s;
+}
+.qa-item i{font-size:26px;margin-bottom:8px;display:block}
+.qa-item span{font-weight:600}
+
+.qa-item:hover{transform:translateY(-4px)}
+
+.pink{background:#fde8f3;color:var(--pink)}
+.orange{background:#fff3e6;color:var(--orange)}
+.blue{background:#eaf2ff;color:var(--blue)}
+.purple{background:#f3edff;color:var(--purple)}
+
+/* GRID */
+.home-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+/* LIST ITEM */
+.list{display:flex;flex-direction:column;gap:12px}
+
+.item{
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:14px;
+}
+
+.item-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+
+.status-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--green);
+  display:inline-block;
+  margin-right:6px;
+}
+
+.badge{
+  font-size:12px;
+  padding:2px 8px;
+  border-radius:8px;
+  margin-left:6px;
+}
+
+.badge.orange{background:#ffedd5;color:#c2410c}
+.badge.red{background:#fee2e2;color:#b91c1c}
+
+.time{color:#6b7280;font-size:13px}
+
+.btn-done{
+  margin-top:10px;
+  width:100%;
+  background:#22c55e;
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
+}

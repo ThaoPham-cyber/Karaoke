@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home - Karaoke</title>
+  <link rel="stylesheet" href="Home.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<div class="home-page">
+
+  <!-- QUICK ACTIONS -->
+  <div class="card">
+    <h3 class="card-title">Thao tác nhanh</h3>
+    <div class="quick-actions">
+      <div class="qa-item pink" data-link="RoomBooking/RoomBooking.html">
+        <i class="fa-solid fa-door-open"></i>
+        <span>Đặt phòng mới</span>
+      </div>
+      <div class="qa-item orange" data-link="FoodBooking/FoodBooking.html">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>Đặt món</span>
+      </div>
+      <div class="qa-item blue"data-link="RoomUsing/RoomUsing.html">
+        <i class="fa-solid fa-clock"></i>
+        <span>Xem phòng đang dùng</span>
+      </div>
+      <div class="qa-item purple" data-link="Bill/Bill.html">
+        <i class="fa-solid fa-credit-card"></i>
+        <span>Thanh toán</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="home-grid">
+
+    <!-- ACTIVE ROOMS -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Phòng đang hoạt động</h3>
+        <span id="activeCount">0 phòng</span>
+      </div>
+      <div id="activeRoomList" class="list"></div>
+    </div>
+
+    <!-- WAITING ORDERS -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Đơn hàng chờ phục vụ</h3>
+        <span id="orderCount">0 đơn</span>
+      </div>
+      <div id="orderList" class="list"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="Home.js"></script>
+</body>
+</html>
