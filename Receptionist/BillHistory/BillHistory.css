@@ -1,0 +1,142 @@
+:root{
+  --pink:#e91e8f;
+  --bg:#f7f8fb;
+  --card:#ffffff;
+  --border:#e5e7eb;
+  --text:#222;
+  --muted:#6b7280;
+}
+
+body{
+  margin:0;
+  font-family: "Segoe UI", system-ui;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.history-page{
+  width:95%;
+  max-width:1200px;
+  margin:30px auto;
+}
+
+/* HEADER */
+.history-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+.history-header h2{
+  color:var(--pink);
+}
+.history-filters{
+  display:flex;
+  gap:10px;
+}
+.history-filters input{
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid var(--border);
+}
+
+/* TABLE */
+.table-wrapper{
+  background:var(--card);
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.05);
+  overflow:auto;
+}
+.bill-table{
+  width:100%;
+  border-collapse:collapse;
+}
+.bill-table th,
+.bill-table td{
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+}
+.bill-table th{
+  background:#fafafa;
+  font-weight:600;
+}
+.bill-table tr:hover{
+  background:#fff0f9;
+}
+.total{
+  font-weight:700;
+  color:var(--pink);
+}
+.method{
+  font-weight:600;
+  text-transform:uppercase;
+  font-size:13px;
+}
+.btn-view{
+  background:var(--pink);
+  border:none;
+  color:#fff;
+  padding:6px 12px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+.modal{
+  width:90%;
+  max-width:520px;
+  background:#fff;
+  border-radius:14px;
+  animation:fadeUp .25s ease;
+}
+@keyframes fadeUp{
+  from{transform:translateY(20px);opacity:0}
+  to{transform:none;opacity:1}
+}
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 18px;
+  border-bottom:1px solid var(--border);
+}
+.close-btn{
+  background:none;
+  border:none;
+  font-size:22px;
+  cursor:pointer;
+}
+.modal-body{
+  padding:16px 18px;
+}
+.modal-row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.modal-row strong{
+  color:#111;
+}
+.modal-section{
+  margin-top:15px;
+}
+.modal-section h4{
+  margin-bottom:6px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:4px;
+}
+.modal-item{
+  display:flex;
+  justify-content:space-between;
+  padding:4px 0;
+}

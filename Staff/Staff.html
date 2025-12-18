@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nhân viên phục vụ - Order Management</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="Staff.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+  <!-- ================== TOP HEADER ================== -->
+  <div class="top-header">
+    <div class="date" id="currentDate"></div>
+
+    <div class="top-right">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Tìm kiếm phòng, khách hàng...">
+      </div>
+
+      <i class="fa-regular fa-bell bell"></i>
+    </div>
+  </div>
+
+  <!-- ================== STAFF CONTENT ================== -->
+  <div class="staff-container">
+
+    <!-- ===== SUMMARY ===== -->
+    <div class="summary-stats">
+      <div class="stat-card all active">
+        <div class="stat-content">
+          <p>Tất cả đơn</p>
+          <h3 id="countAll">0</h3>
+        </div>
+        <div class="stat-icon green">
+          <i class="fa-solid fa-box"></i>
+        </div>
+      </div>
+
+      <div class="stat-card pending">
+        <div class="stat-content">
+          <p>Chờ giao</p>
+          <h3 id="countPending">0</h3>
+        </div>
+        <div class="stat-icon yellow">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+      </div>
+
+      <div class="stat-card shipping">
+        <div class="stat-content">
+          <p>Đang giao</p>
+          <h3 id="countShipping">0</h3>
+        </div>
+        <div class="stat-icon blue">
+          <i class="fa-solid fa-box-open"></i>
+        </div>
+      </div>
+
+      <div class="stat-card completed">
+        <div class="stat-content">
+          <p>Đã giao</p>
+          <h3 id="countCompleted">0</h3>
+        </div>
+        <div class="stat-icon green">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ORDER GRID ===== -->
+    <div id="orderGrid" class="order-grid"></div>
+
+  </div>
+
+  <!-- ================== SCRIPT ================== -->
+  <script src="Staff.js"></script>
+
+  <!-- ===== COMMON HEADER SCRIPT ===== -->
+  <script>
+    function loadCurrentDate() {
+      const dateEl = document.getElementById("currentDate");
+      if (!dateEl) return;
+
+      const now = new Date();
+      const days = ["Chủ Nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"];
+      dateEl.textContent =
+        `${days[now.getDay()]}, ${now.getDate()} tháng ${now.getMonth() + 1}, ${now.getFullYear()}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", loadCurrentDate);
+  </script>
+
+</body>
+</html>
