@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Karaoke VIP</title>
+    <link rel="stylesheet" href="Home.css">
+    <link rel="stylesheet" href="../Song/Song.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../List/List.css">
+    <link rel="stylesheet" href="../Food/Food.css">
+ 
+
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>Karaoke VIP</h3>
+                <span id="roomName">Phòng VIP-01</span>
+            </div>
+            <nav>
+                <a class="nav-item active" onclick="loadSongPage(this)">
+                    <i class="fa-solid fa-music"></i> Chọn bài hát
+                </a>
+                <a class="nav-item" onclick="loadPlaylistPage(this)">
+                    <i class="fa-solid fa-list"></i> Danh sách phát
+                </a>
+                <a class="nav-item" onclick="loadFoodPage(this)">
+                    <i class="fa-solid fa-cart-shopping"></i> Gọi món
+                </a>
+            </nav>
+            <div class="usage">
+                <p>Thời gian sử dụng</p>
+                <strong id="usageTime">0 giờ 0 phút</strong>
+            </div>
+        </aside>
+
+        <div class="main">
+            <header class="topbar">
+                <div>
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    Chào mừng quý khách! | 
+                    <span id="roomInfo">Phòng VIP-01</span> - 
+                    <span id="runningTime">00:00:00</span>
+                </div>
+            </header>
+            
+            <main class="content" id="content-area"></main>
+        </div>
+    </div>
+
+       <script src="../Song/SongData.js"></script>
+    <script src="../Song/Song.js"></script>
+    <script src="Home.js"></script>
+    <script src="../List/List.js"></script>   
+    <script src="../Food/FoodData.js"></script>
+    <script src="../Food/Food.js"></script>
+</body>
+</html>

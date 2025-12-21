@@ -15,7 +15,7 @@ public class JSBridge {
     // ✅ Cho phép JavaScript trong WebView gọi để lấy nội dung HTML
     public String loadHtmlContent(String relativePath) {
         try {
-            File file = new File("D:/VSCode/Staff/" + relativePath);
+            File file = new File("D:/VSCode/guest/" + relativePath);
             if (file.exists()) {
                 System.out.println("📄 Đang tải: " + file.getAbsolutePath());
                 return Files.readString(file.toPath(), StandardCharsets.UTF_8);

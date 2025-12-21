@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="Song.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="song-page">
+        <h2>Chọn bài hát</h2>
+        <p class="sub">Tìm và thêm bài hát yêu thích vào danh sách phát</p>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input id="searchInput" placeholder="Tìm kiếm tên bài hát, ca sĩ..." onkeyup="searchSong()">
+                <button onclick="searchSong()"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+        </div>
+
+        <div class="genre">
+            <button class="active" onclick="filterGenre('all', this)">Tất cả</button>
+            <button onclick="filterGenre('Pop', this)">Pop</button>
+            <button onclick="filterGenre('Ballad', this)">Ballad</button>
+            <button onclick="filterGenre('Remix', this)">Remix</button>
+            <button onclick="filterGenre('Bolero', this)">Bolero</button>
+        </div>
+
+        <div id="songList" class="song-list">
+            </div>
+    </div>
+
+    <script src="SongData.js"></script>
+    <script src="Song.js"></script>
+    <script>
+        // Tự động render nếu mở file này trực tiếp
+        window.onload = () => { if(typeof SongData !== 'undefined') renderSongs(SongData); };
+    </script>
+</body>
+</html>

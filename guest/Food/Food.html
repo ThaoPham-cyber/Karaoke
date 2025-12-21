@@ -1,0 +1,43 @@
+<div class="food-page">
+    <div class="food-main">
+        <div class="food-header">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="foodSearch" placeholder="Tìm kiếm món ăn..." onkeyup="searchFood()">
+            </div>
+            <div class="category-tabs">
+                <button class="active" onclick="filterFood('all', this)">Tất cả</button>
+                <button onclick="filterFood('Đồ uống có cồn', this)">Đồ uống</button>
+                <button onclick="filterFood('Nước ngọt', this)">Nước ngọt</button>
+                <button onclick="filterFood('Đồ ăn nhẹ', this)">Đồ ăn</button>
+            </div>
+        </div>
+        <div id="foodGrid" class="food-grid">
+            </div>
+    </div>
+
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <div class="cart-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div>
+                <h3>Giỏ hàng</h3>
+                <span id="cartCount">0 món</span>
+            </div>
+        </div>
+        <div id="cartList" class="cart-items">
+            </div>
+        <div class="cart-summary">
+            <div class="summary-line">
+                <span>Tạm tính</span>
+                <span id="cartSubtotal">0đ</span>
+            </div>
+            <div class="summary-line total">
+                <span>Tổng cộng</span>
+                <span id="cartTotal">0đ</span>
+            </div>
+            <button class="btn-checkout" onclick="sendOrder()">
+                <i class="fa-solid fa-paper-plane"></i> Gửi đơn hàng
+            </button>
+        </div>
+    </div>
+</div>
