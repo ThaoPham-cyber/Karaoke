@@ -1,8 +1,3 @@
-/* File: Receptionist/Food/Food.js
-   - Reads services from localStorage key "karaoke_services_v1"
-   - Reads rooms from localStorage key "karaoke_rooms_v1"
-   - Maintains reception cart in "reception_carts_v1"
-*/
 
 (() => {
   const SERVICE_KEY = "karaoke_services_v1";
@@ -268,25 +263,40 @@
   function clearCart() {
     if (!selectedRoomId) return;
     if (!confirm("Xóa toàn bộ giỏ hàng của phòng này?")) return;
-    carts[selectedRoomId] = [];
-    saveCarts(); renderCart(); updateCartCount();
+    
+     renderCart(); updateCartCount();
   }
 
-  // checkout (demo)
   function checkout() {
-    if (!selectedRoomId) return;
-    const cart = getCartForRoom(selectedRoomId);
-    if (!cart.length) { alert("Giỏ trống."); return; }
-    // demo: create invoice object (could be integrated with Invoice system)
-    if (confirm("Thanh toán (demo) và xóa giỏ?")) {
-      carts[selectedRoomId] = [];
-      saveCarts();
-      renderCart();
-      updateCartCount();
-      showToast("Thanh toán thành công (demo). Giỏ đã xóa.", 1600);
-      closeCartModal();
-    }
-  }
+  if (!selectedRoomId) return;
+  const cart = getCartForRoom(selectedRoomId);
+  if (!cart.length) { alert("Giỏ trống."); return; }
+  if (!confirm("Gửi món cho phòng này?")) return;
+  const rooms = JSON.parse(localStorage.getItem(ROOM_KEY)) || [];
+  const room = rooms.find(r => r.id === selectedRoomId);
+  if (!room) return;
+
+  if (!room.orders) room.orders = [];
+  cart.forEach(item => {
+    const svc = services.find(s => s.id === item.id);
+    if (!svc) return;
+    room.orders.push({
+      id: svc.id,
+      name: svc.name,
+      price: svc.price,
+      qty: item.qty
+    });
+  });
+  room.hasNewOrder = true;
+  localStorage.setItem(ROOM_KEY, JSON.stringify(rooms));
+  carts[selectedRoomId] = [];
+  saveCarts();
+  renderCart();
+  updateCartCount();
+  closeCartModal();
+  showToast("Đã gửi món cho phòng", 1600);
+}
+
 
   // small toast
   function showToast(msg, ms=1200) {

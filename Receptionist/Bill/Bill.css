@@ -88,8 +88,8 @@ body {
 
 /* BILL DETAILS */
 .bill-detail-panel {
-  position: sticky;
-  top: 26px;
+  position: relative;
+  top: 0px;
 }
 
 .section-title {
@@ -253,6 +253,48 @@ body {
   }
 
   .bill-detail-panel {
-    position: static;
+    position: relative;
+    top:0px;
+  }
+}
+/* ===== RESET & LAYOUT FIX ===== */
+.bill-page {
+  width: 98%;
+  max-width: 1400px;
+  margin: 20px auto;
+}
+
+.bill-container {
+  display: grid !important;
+  /* Cột 1 cố định 330px, Cột 2 tự động chiếm phần còn lại */
+  grid-template-columns: 330px 1fr !important; 
+  gap: 22px;
+  align-items: start; /* Giúp các box không bị kéo dài bằng nhau nếu nội dung ít */
+}
+
+/* Đảm bảo các thẻ con không bị float hay lệch */
+.waiting-list, .bill-detail-panel {
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Fix lỗi hiển thị trên màn hình lớn */
+@media (min-width: 993px) {
+  .waiting-list {
+    grid-column: 1 / 2;
+  }
+  .bill-detail-panel {
+    grid-column: 2 / 3;
+  }
+}
+
+/* Responsive cho điện thoại */
+@media (max-width: 992px) {
+  .bill-container {
+    grid-template-columns: 1fr !important;
+  }
+  .waiting-list, .bill-detail-panel {
+    grid-column: 1 / -1 !important;
   }
 }

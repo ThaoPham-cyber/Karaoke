@@ -1,0 +1,243 @@
+body {
+    margin: 0;
+    font-family: system-ui;
+    background: #f5f6fa;
+}
+
+.calendar-page {
+    padding: 24px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-add {
+    background: #ec4899;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.summary-card {
+    background: rgb(245, 217, 240);
+    padding: 16px;
+    border-radius: 14px;
+}
+
+.summary-card.green { background:#81fa76 }
+.summary-card.yellow { background:#f77c76 }
+.summary-card.blue { background:#77ff9b }
+
+.calendar-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.calendar-box {
+    background: white;
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7,1fr);
+    gap: 10px;
+}
+#time-slot {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: #ecfdf5;
+    color: #ecfdf5;
+    border: 1px solid #ffffff;
+}
+#time-slot option {
+    background-color: #ffffff;
+    color: #000000;
+}
+#time-slot option:hover {
+    background-color: #90eaf8;
+}
+
+.day-cell {
+    height: 90px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.day-cell.active {
+    border-color: #ec4899;
+}
+
+.booking-list {
+    background: white;
+    padding: 16px;
+    border-radius: 16px;
+    overflow-y: auto;
+}
+
+.booking-item {
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden { display: none }
+
+.modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    width: 420px;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.input-icon {
+    position: relative;
+}
+
+.input-icon i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.input-icon input {
+    padding-left: 36px;
+}
+.date-select {
+    display: flex;
+    gap: 10px;
+}
+
+.date-select select {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+#roomselect {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: #eff6ff;
+    color: #eff6ff;
+    border: 1px solid #ffffff;
+}
+#timeSlot {
+   border: 1px solid #dbdada;
+    height: auto;
+    padding: 2px;
+    background: white;
+    width: 100%;
+    
+
+    
+}
+.time-slot select {
+       width: 100%;
+    border: none;
+    padding: 8px;
+    background: transparent;
+    appearance: none;
+}
+#timeSlot option {
+    background-color: #ffffff;
+    color: #000000;
+}
+#timeSlot option:hover {
+    background-color: #90eaf8;
+}
+.btn-huy{
+    background: rgb(241, 95, 95);
+    height: 35px;
+    width: 50px;
+    border-radius: 5px;
+
+}
+.btn-primary{
+    background: #45bcce;
+    height: 35px;
+    width: auto;
+
+    border-radius: 5px;
+}
+.day-cell {
+    position: relative;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+.day-cell:hover {
+    background: #ede9fe;
+}
+
+.day-cell.active {
+    background: #fc8f8f;
+    color: #fff;
+}
+
+.day-cell.has-booking {
+    background: #dbeafe;
+    border: 2px solid #2563eb;
+}
+
+.day-cell.busy {
+    background: #fee2e2;
+    border-color: #dc2626;
+}
+
+.badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: #dc2626;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 999px;
+}

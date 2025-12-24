@@ -80,32 +80,30 @@
   }
 
   // compute totals + monthly/periodic breakdown
-  function aggregateByPeriod(services, granularity, from, to) {
-    // granularity: "month" | "day" | "year"
-    const buckets = new Map();
+  function aggregateBookingRevenue(bookings, granularity) {
+  const map = new Map();
 
-    const addToBucket = (k, amount) => buckets.set(k, (buckets.get(k) || 0) + amount);
+  bookings.forEach(b => {
+    const d = new Date(b.date);
+    let key;
 
-    services.forEach(s => {
-      const d = s.date ? new Date(s.date) : null;
-      if (!d) return;
-      let key;
-      if (granularity === "day") {
-        key = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-      } else if (granularity === "year") {
-        key = `${d.getFullYear()}`;
-      } else { // month
-        key = `${d.getFullYear()}-${pad2(d.getMonth()+1)}`;
-      }
-      addToBucket(key, (s.price || 0) * (s.sold || 1));
-    });
+    if (granularity === "day") {
+      key = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+    } else if (granularity === "year") {
+      key = `${d.getFullYear()}`;
+    } else {
+      key = `${d.getFullYear()}-${pad2(d.getMonth()+1)}`;
+    }
 
-    // produce sorted arrays (keys ascending)
-    const entries = Array.from(buckets.entries()).sort((a,b)=> a[0] < b[0] ? -1 : 1);
-    const labels = entries.map(e => e[0]);
-    const values = entries.map(e => e[1]);
-    return { labels, values };
-  }
+    map.set(key, (map.get(key) || 0) + b.total);
+  });
+
+  const labels = [...map.keys()].sort();
+  const values = labels.map(l => map.get(l));
+
+  return { labels, values };
+}
+
 
   function pad2(n){ return (n<10? "0":"") + n; }
 
@@ -252,32 +250,35 @@
 
   // main refresh pipeline
   function refreshAll() {
-    // load raw
-    const rawRooms = safeParse(KEY_ROOMS);
-    const rawServices = safeParse(KEY_SERVICES);
-    const rawCustomers = safeParse(KEY_CUSTOMERS);
+  const rawRooms = safeParse(KEY_ROOMS);
+  const rawBookings = safeParse("karaoke_bookings_v1");
 
-    // normalize
-    const rooms = normalizeRooms(rawRooms);
-    const services = normalizeServices(rawServices);
+  const rooms = normalizeRooms(rawRooms);
+  const bookings = normalizeBookings(rawBookings);
 
-    // date filter
-    const from = toDateSafe(fromDateEl.value);
-    const to = toDateSafe(toDateEl.value);
-    // if user picks to date only, set to end of day
-    if (to) to.setHours(23,59,59,999);
+  const from = toDateSafe(fromDateEl.value);
+  const to = toDateSafe(toDateEl.value);
+  if (to) to.setHours(23,59,59,999);
 
-    const servicesFiltered = filterByDate(services, from, to);
+  const filtered = bookings.filter(b => {
+    const d = new Date(b.date);
+    if (from && d < from) return false;
+    if (to && d > to) return false;
+    return true;
+  });
 
-    // render summary
-    renderSummary(servicesFiltered, rooms, rawCustomers);
+  /* ===== SUMMARY ===== */
+  const totalRevenue = filtered.reduce((s,b)=>s+b.total,0);
+  totalRevenueEl.textContent = totalRevenue.toLocaleString()+" VND";
+  avgPerMonthEl.textContent = Math.round(totalRevenue / 12).toLocaleString()+" VND";
 
-    // render top services
-    renderTopServices(servicesFiltered);
+  roomCountEl.textContent = rooms.length+" phòng";
 
-    // draw charts
-    drawCharts(servicesFiltered, rooms, granularityEl.value);
-  }
+  /* ===== CHART ===== */
+  const ag = aggregateBookingRevenue(filtered, granularityEl.value);
+  drawRevenueChart(ag.labels, ag.values);
+}
+
 
   // normalize helper reuse functions (copied for module scope)
   function normalizeServices(raw){ return (raw||[]).map(s=>({ name: s.name||s.tenDV||s.tenDV||s.ten||s.title, price: Number(s.price||s.gia||s.amount||0), sold: Number(s.sold||s.soluong||s.qty||0), date: s.date||s.ngay||s.createdAt||null })); }

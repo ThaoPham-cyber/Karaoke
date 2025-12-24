@@ -1,81 +1,90 @@
-<!doctype html>
-<html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <title>Reception - Bill</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="../../ui/Service/service.css">   <link rel="stylesheet" href="Bill.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-</head>
-<body>
-  <div class="bill-page">
-    <div class="bill-container">
+<div class="bill-page">
+  <div class="bill-container">
 
-            <section class="waiting-list card">
-        <h4>Phòng chờ thanh toán (<span id="waitingCount">0</span>)</h4>
-        <div id="waitingRoomList" class="room-list">
-                  </div>
-      </section>
+    <!-- ===== PHÒNG CHỜ THANH TOÁN ===== -->
+    <section class="waiting-list card">
+      <h4>Phòng chờ thanh toán (<span id="waitingCount">0</span>)</h4>
+      <div id="waitingRoomList" class="room-list"></div>
+    </section>
 
-            <section class="bill-detail-panel card">
-        <h4>Chi tiết hóa đơn</h4>
-        <div id="billDetails">
-                    <div class="bill-info-header">
-            <div class="info-row">
-              <div>Phòng: <strong id="billRoomName">Phòng —</strong></div>
-              <div>Khách hàng: <strong id="billCustomerName">—</strong></div>
-            </div>
-            <div class="info-row">
-              <div>SĐT: <span id="billCustomerPhone">—</span></div>
-              <div>Thời gian: <span id="billTimeRange">—</span></div>
-            </div>
-          </div>
+    <!-- ===== CHI TIẾT HÓA ĐƠN ===== -->
+    <section class="bill-detail-panel card">
+      <h4>Chi tiết hóa đơn</h4>
 
-                    <h4 class="section-title">Tiền phòng</h4>
-          <div id="roomFeeDetail" class="line-item">
-                      </div>
+      <div id="billDetails">
+        <div class="bill-info-header">
+          <div class="info-row">
+            <div>Phòng: <strong id="billRoomName">—</strong></div>
+            <div>Khách hàng: <strong id="billCustomerName">—</strong></div>
+          </div>
+          <div class="info-row">
+            <div>SĐT: <span id="billCustomerPhone">—</span></div>
+            <div>Thời gian: <span id="billTimeRange">—</span></div>
+          </div>
+        </div>
 
-                    <h4 class="section-title">Dịch vụ</h4>
-          <div id="serviceDetail" class="service-list">
-                      </div>
+        <h4 class="section-title">Tiền phòng</h4>
+        <div id="roomFeeDetail" class="line-item"></div>
 
-                    <div class="bill-summary">
-            <div class="summary-row"><span>Tạm tính:</span> <strong id="subTotal">0đ</strong></div>
-            <div class="summary-row"><span>Giảm giá:</span> <strong id="discount">0đ</strong></div>
-            <div class="summary-row total"><span>Tổng cộng:</span> <strong id="grandTotal">0đ</strong></div>
-          </div>
-        </div>
+        <h4 class="section-title">Dịch vụ</h4>
+        <div id="serviceDetail" class="service-list"></div>
 
-                <div class="payment-section">
-          <h4 class="section-title">Phương thức thanh toán</h4>
-          <div id="paymentMethods" class="method-selector">
-            <button class="pay-method active" data-method="cash">
-              <i class="fa-solid fa-money-bill-wave"></i><br>Tiền mặt
-            </button>
-            <button class="pay-method" data-method="card">
-              <i class="fa-solid fa-credit-card"></i><br>Thẻ
-            </button>
-            <button class="pay-method" data-method="transfer">
-              <i class="fa-solid fa-qrcode"></i><br>Chuyển khoản
-            </button>
-          </div>
+        <div class="bill-summary">
+          <div class="summary-row">
+            <span>Tạm tính:</span>
+            <strong id="subTotal">0đ</strong>
+          </div>
+          <div class="discount-box">
+  <label>Giảm giá</label>
+  <div class="discount-inputs">
+    <input type="number" id="discountValue" placeholder="Số tiền">
+    <select id="discountType">
+      <option value="money">đ</option>
+      <option value="percent">%</option>
+    </select>
+  </div>
+</div>
 
-          <div class="cash-input-wrap">
-            <strong>Tiền khách đưa</strong>
-            <input id="cashReceived" type="number" placeholder="Nhập số tiền" value="0"/>
-          </div>
-          <div class="cash-return-wrap">
-            <strong>Tiền trả lại:</strong> <span id="cashReturn" class="cash-return-value">0đ</span>
-          </div>
+          <div class="summary-row total">
+            <span>Tổng cộng:</span>
+            <strong id="grandTotal">0đ</strong>
+          </div>
+        </div>
+      </div>
 
-          <button id="confirmPayment" class="btn btn-primary btn-confirm-payment" disabled>
-            <i class="fa-solid fa-check"></i> Xác nhận thanh toán
-          </button>
-        </div>
-      </section>
-    </div>
-  </div>
+      <!-- ===== THANH TOÁN ===== -->
+      <div class="payment-section">
+        <h4 class="section-title">Phương thức thanh toán</h4>
 
-  <script src="Bill.js"></script>
-</body>
-</html>
+        <div id="paymentMethods" class="method-selector">
+          <button class="pay-method active" data-method="cash">
+            <i class="fa-solid fa-money-bill-wave"></i><br>Tiền mặt
+          </button>
+          <button class="pay-method" data-method="card">
+            <i class="fa-solid fa-credit-card"></i><br>Thẻ
+          </button>
+          <button class="pay-method" data-method="transfer">
+            <i class="fa-solid fa-qrcode"></i><br>Chuyển khoản
+          </button>
+        </div>
+
+        <div class="cash-input-wrap">
+          <strong>Tiền khách đưa</strong>
+          <input id="cashReceived" type="number" value="0" />
+        </div>
+
+        <div class="cash-return-wrap">
+          <strong>Tiền trả lại:</strong>
+          <span id="cashReturn" class="cash-return-value">0đ</span>
+        </div>
+
+        <button id="confirmPayment"
+                class="btn btn-primary btn-confirm-payment"
+                disabled>
+          <i class="fa-solid fa-check"></i> Xác nhận thanh toán
+        </button>
+      </div>
+    </section>
+
+  </div>
+</div>

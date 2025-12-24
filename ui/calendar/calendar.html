@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hẹn phòng</title>
+    <link rel="stylesheet" href="calendar.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="calendar-page">
+
+    <!-- HEADER -->
+    <div class="calendar-header">
+       
+        <button class="btn-add" onclick="openBookingModal()">
+            <i class="fa-solid fa-plus"></i> Thêm lịch hẹn
+        </button>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary">
+        <div class="summary-card">
+            <span>Tổng lịch hẹn</span>
+            <strong id="sumTotal">0</strong>
+        </div>
+        <div class="summary-card green">
+            <span>Đã xác nhận</span>
+            <strong id="sumConfirmed">0</strong>
+        </div>
+        <div class="summary-card yellow">
+            <span>Chờ xác nhận</span>
+            <strong id="sumPending">0</strong>
+        </div>
+        <div class="summary-card blue">
+            <span>Tổng tiền cọc</span>
+            <strong id="sumDeposit">0đ</strong>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="calendar-main">
+        <div class="calendar-box">
+            <div class="calendar-title">
+                <h3 id="calendarMonth"></h3>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+
+        <div class="booking-list">
+            <h3 id="selectedDateTitle">Ngày</h3>
+            <div id="bookingList"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal hidden" id="bookingModal">
+    <div class="modal-content">
+        <h3>Thêm lịch hẹn phòng</h3>
+
+        <label>Phòng</label>
+        <div class="room-select">
+        <select id="roomSelect"></select>
+    </div>
+
+        <label>Ngày hẹn</label>
+<div class="date-select">
+    <select id="daySelect"></select>
+    <select id="monthSelect"></select>
+    <select id="yearSelect"></select>
+</div>
+
+
+<label>Khung giờ</label>
+<div class="time-slot">
+<select id="timeSlot">
+    <option value="">-- Chọn khung giờ --</option>
+    <option value="07:00-09:00">07:00 - 09:00</option>
+    <option value="09:00-11:00">09:00 - 11:00</option>
+    <option value="11:00-13:00">11:00 - 13:00</option>
+    <option value="13:00-15:00">13:00 - 15:00</option>
+    <option value="15:00-17:00">15:00 - 17:00</option>
+    <option value="17:00-19:00">17:00 - 19:00</option>
+    <option value="19:00-21:00">19:00 - 21:00</option>
+    <option value="21:00-23:00">21:00 - 23:00</option>
+    <option value="23:00-01:00">23:00 - 01:00</option>
+</select>
+</div>
+
+        <label>Tên khách hàng</label>
+        <input type="text" id="customerName">
+
+        <label>Số điện thoại</label>
+        <input type="text" id="phone">
+
+        <label>Tiền cọc</label>
+        <input type="number" id="deposit">
+
+        <label>Ghi chú</label>
+        <textarea id="note"></textarea>
+
+        <div class="modal-actions">
+            <button class="btn-huy" onclick="closeBookingModal()">Hủy</button>
+            <button class="btn-primary" onclick="saveBooking()">Thêm lịch hẹn</button>
+        </div>
+    </div>
+</div>
+
+<script src="../Room/Room.js"></script>
+<script src="calendar.js"></script>
+</body>
+</html>

@@ -13,7 +13,7 @@
 
 
 .modal-backdrop{
-  background: rgba(112, 233, 240, 0.8) !important;
+  background: rgb(207, 252, 255) !important;
 }
 
 .stat-card{
@@ -60,7 +60,7 @@ body{font-family: "Segoe UI", Roboto, Arial; color:var(--text); background:#f5f6
  
 }
 .summary-item.using{
-  background-color: #f87f7f;
+  background-color: #ff4f4f;
   border-radius: color(#55dd4c);
 }
 .summary-item.maintenance{
@@ -108,7 +108,7 @@ body{font-family: "Segoe UI", Roboto, Arial; color:var(--text); background:#f5f6
 .room-card .room-meta{font-size:13px; color:#4b5563; margin-bottom:10px}
 
 /* card border color */
-.room-card.red{border-top:7px solid #fa7b7b}
+.room-card.red{border-top:7px solid #fd4747}
 .room-card.yellow{border-top:7px solid #e9b949}
 .room-card.green{border-top:7px solid #47c47a}
 
@@ -124,7 +124,7 @@ body{font-family: "Segoe UI", Roboto, Arial; color:var(--text); background:#f5f6
 .actions button{border:none; padding:10px 12px; border-radius:12px; cursor:pointer; display:flex; gap:8px; align-items:center; font-weight:600}
 .btn-edit{background:#eef2ff; color:#1e3a8a}
 .btn-customer{background:#d1fae5; color:#064e3b}
-.btn-delete{background:#fff1f2; color:#9f1239}
+.btn-delete{background:#ffb1b6; color:#9f1239}
 
 /* modal base */
 .modal{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:60}
@@ -159,7 +159,7 @@ body{font-family: "Segoe UI", Roboto, Arial; color:var(--text); background:#f5f6
 .order-item{display:flex; justify-content:space-between; gap:8px; padding:10px; border-radius:10px; background:#fbfbfd; border:1px solid #f1f1f7}
 .add-service-row{display:flex; gap:8px; margin-top:8px}
 .add-service-row select, .add-service-row input{padding:8px 10px; border-radius:8px; border:1px solid #e6e6ee}
-.btn-add-service{background:var(--purple); color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer}
+.btn-add-service{background:rgb(255, 64, 64); color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer}
 
 /* totals */
 .usage-footer{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:10px}
@@ -172,3 +172,34 @@ body{font-family: "Segoe UI", Roboto, Arial; color:var(--text); background:#f5f6
   .room-list{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
 }
 /* Force-style modal header title (put at END of RoomBooking.css) */
+.btn-small.btn-order-decr{
+  background:white;
+  color: #000000;
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+  border-radius: 6px; 
+  cursor: pointer;
+  height: auto;
+  width: auto;
+} 
+  
+.btn-small.btn-order-incr{
+   background:white;
+  color: #000000;
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+  border-radius: 6px; 
+  cursor: pointer;
+  height: auto;
+  width: auto;
+}
+.btn-small.btn-order-del{
+   background:white;
+  color: #ff3f3f;
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+  border-radius: 6px; 
+  cursor: pointer;
+  height: auto;
+  width: auto;
+}

@@ -1,8 +1,11 @@
 (function () {
 
+  /* ================= STORAGE KEYS ================= */
   const ROOM_KEY = "karaoke_rooms_v1";
   const BILL_KEY = "karaoke_bill_pending_v1";
+  const SERVICE_KEY = "karaoke_services_v1";
 
+  /* ================= DOM ================= */
   const activeRoomList = document.getElementById("activeRoomList");
   const orderList = document.getElementById("orderList");
   const activeCount = document.getElementById("activeCount");
@@ -26,17 +29,25 @@
     };
   });
 
-  /* ================= MARK SERVED ================= */
+  /* ================= SYNC ORDER → BILL ================= */
   function markOrderServed(roomId) {
-    const rooms = load(ROOM_KEY);
-    const bills = load(BILL_KEY);
+   const rooms = load(ROOM_KEY);
+   const bills = load(BILL_KEY);
+   const services = load(SERVICE_KEY);
 
-    const room = rooms.find(r => r.id === roomId);
-    if (!room || !room.orders?.length) return;
+   const roomIndex = rooms.findIndex(r => r.id === roomId);
+   if (roomIndex === -1) return;
 
+   const room = rooms[roomIndex];
+   if (!room.orders || room.orders.length === 0) return;
+
+   // ===== 1. LẤY / TẠO BILL =====
+   let bill = bills.find(b => b.roomId === roomId);
+
+    if (!bill) {
     const customer = room.customers?.[0] || {};
 
-    bills.push({
+    bill = {
       roomId: room.id,
       roomName: room.name,
       startTime: room.checkIn || Date.now(),
@@ -45,26 +56,47 @@
         name: customer.name || "Khách lẻ",
         phone: customer.phone || ""
       },
-      services: room.orders.map(o => ({
-        name: o.name,
-        price: o.price,
-        qty: o.qty
-      }))
-    });
+      services: []
+    };
 
-    delete room.orders;
-
-    save(BILL_KEY, bills);
-    save(ROOM_KEY, rooms);
-
-    render();
+    bills.push(bill);
   }
+
+  // ===== 2. GỘP DỊCH VỤ =====
+  room.orders.forEach(o => {
+    const svc = services.find(s => s.id === o.svcId);
+    if (!svc) return;
+
+    const existed = bill.services.find(s => s.svcId === o.svcId);
+    if (existed) {
+      existed.qty += o.qty;
+    } else {
+      bill.services.push({
+        svcId: svc.id,
+        name: svc.name,
+        price: svc.price,
+        qty: o.qty
+      });
+    }
+  });
+
+  // ===== 3. CLEAR ĐƠN =====
+  rooms[roomIndex].orders = [];
+  rooms[roomIndex].hasNewOrder = false;
+
+  save(ROOM_KEY, rooms);
+  save(BILL_KEY, bills);
+
+  render(); // 🔥 UI BIẾN MẤT NGAY
+  }
+
 
   /* ================= RENDER ================= */
   function render() {
     const rooms = load(ROOM_KEY);
+    const services = load(SERVICE_KEY);
 
-    /* ===== PHÒNG ĐANG DÙNG ===== */
+    /* ===== PHÒNG ĐANG SỬ DỤNG ===== */
     const activeRooms = rooms.filter(r => r.status === "using");
     activeCount.textContent = `${activeRooms.length} phòng`;
     activeRoomList.innerHTML = "";
@@ -85,11 +117,12 @@
         <div>KH: ${cust.name || "-"}</div>
         <div class="time">⏱ Bắt đầu: ${cust.start || "--:--"}</div>
       `;
+
       activeRoomList.appendChild(el);
     });
 
     /* ===== ĐƠN CHỜ PHỤC VỤ ===== */
-    const orderRooms = rooms.filter(r => r.orders?.length);
+    const orderRooms = rooms.filter(r => r.orders && r.orders.length);
     orderCount.textContent = `${orderRooms.length} đơn`;
     orderList.innerHTML = "";
 
@@ -101,12 +134,20 @@
 
       el.innerHTML = `
         <div class="item-top">
-          <strong>${r.name}
+          <strong>
+            ${r.name}
             ${urgent ? `<span class="badge red">Gấp</span>` : ""}
           </strong>
         </div>
-        <div>${r.orders.map(o => `• ${o.name} × ${o.qty}`).join("<br>")}</div>
-        <button class="btn-done">✔ Đánh dấu đã phục vụ</button>
+
+        <div class="order-list">
+          ${r.orders.map(o => {
+            const svc = services.find(s => s.id === o.svcId);
+            return `• ${svc ? svc.name : "(Dịch vụ đã xoá)"} × ${o.qty}`;
+          }).join("<br>")}
+        </div>
+
+        <button class="btn-done">✔ Đã phục vụ</button>
       `;
 
       el.querySelector(".btn-done").onclick = () => {

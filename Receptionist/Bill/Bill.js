@@ -1,10 +1,3 @@
-/* =========================================================
-   Bill.js – Production version (FINAL)
-   - Thanh toán & khóa bill
-   - Lưu lịch sử bill (bill_history)
-   - Đồng bộ Room / Staff
-========================================================= */
-
 (() => {
 
   /* ================== STORAGE KEYS ================== */
@@ -25,7 +18,6 @@
   const serviceDetail = document.getElementById("serviceDetail");
 
   const subTotalEl = document.getElementById("subTotal");
-  const discountEl = document.getElementById("discount");
   const grandTotalEl = document.getElementById("grandTotal");
 
   const paymentMethods = document.getElementById("paymentMethods");
@@ -33,12 +25,16 @@
   const cashReturnEl = document.getElementById("cashReturn");
   const confirmPaymentBtn = document.getElementById("confirmPayment");
 
+  const discountValueInput = document.getElementById("discountValue");
+  const discountTypeSelect = document.getElementById("discountType");
+
   /* ================== STATE ================== */
   let bills = [];
   let rooms = [];
   let selectedRoomId = null;
   let paymentMethod = "cash";
   let grandTotalAmount = 0;
+  let discountAmount = 0;
 
   /* ================== UTIL ================== */
   const formatCurrency = v =>
@@ -75,6 +71,16 @@
       (sum, s) => sum + s.price * s.qty,
       0
     );
+  }
+
+  function calcDiscount(subTotal) {
+    const val = Number(discountValueInput.value || 0);
+    if (val <= 0) return 0;
+
+    if (discountTypeSelect.value === "percent") {
+      return Math.min(subTotal, subTotal * val / 100);
+    }
+    return Math.min(subTotal, val);
   }
 
   /* ================== UI ================== */
@@ -141,16 +147,18 @@
     const roomFee = calcRoomFee(bill);
     const serviceTotal = calcServiceTotal(bill);
 
-    grandTotalAmount = roomFee.total + serviceTotal;
+    const subTotal = roomFee.total + serviceTotal;
+    discountAmount = calcDiscount(subTotal);
+    grandTotalAmount = subTotal - discountAmount;
 
     billRoomName.textContent = bill.roomName;
     billCustomerName.textContent = bill.customer?.name || "Khách lẻ";
     billCustomerPhone.textContent = bill.customer?.phone || "—";
 
     billTimeRange.textContent =
-      new Date(bill.startTime).toLocaleTimeString("vi-VN", {hour:"2-digit",minute:"2-digit"}) +
+      new Date(bill.startTime).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }) +
       " - " +
-      new Date().toLocaleTimeString("vi-VN", {hour:"2-digit",minute:"2-digit"});
+      new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
 
     roomFeeDetail.innerHTML = `
       <span>${bill.roomName} × ${roomFee.hours}h</span>
@@ -164,13 +172,18 @@
       </div>
     `).join("");
 
-    subTotalEl.textContent = formatCurrency(grandTotalAmount);
-    discountEl.textContent = formatCurrency(0);
+    subTotalEl.textContent = formatCurrency(subTotal);
     grandTotalEl.textContent = formatCurrency(grandTotalAmount);
 
     confirmPaymentBtn.disabled = false;
     updateCashReturn();
   }
+
+  discountValueInput.oninput = () => {
+    const bill = bills.find(b => b.roomId === selectedRoomId);
+    if (bill) renderBillDetails(bill);
+  };
+  discountTypeSelect.onchange = discountValueInput.oninput;
 
   /* ================== PAYMENT ================== */
   function updateCashReturn() {
@@ -207,10 +220,26 @@
 
   cashReceivedInput.oninput = updateCashReturn;
 
-  /* ================== CONFIRM PAYMENT ================== */
-  confirmPaymentBtn.onclick = () => {
+  /* ================== QR ================== */
+  function showQRPopup(onConfirm) {
+    const html = `
+      <div class="qr-overlay">
+        <div class="qr-box">
+          <h3>Quét mã QR để thanh toán</h3>
+          <img src="images/QR.png" style="width:220px">
+          <button id="confirmQR">Xác nhận đã thanh toán</button>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML("beforeend", html);
+    document.getElementById("confirmQR").onclick = () => {
+      document.querySelector(".qr-overlay").remove();
+      onConfirm();
+    };
+  }
+
+  /* ================== COMPLETE PAYMENT ================== */
+  function completePayment() {
     if (!selectedRoomId) return;
-    if (!confirm("Xác nhận thanh toán?")) return;
 
     const billIndex = bills.findIndex(b => b.roomId === selectedRoomId);
     if (billIndex < 0) return;
@@ -219,7 +248,8 @@
     const roomFee = calcRoomFee(bill);
     const serviceTotal = calcServiceTotal(bill);
 
-    /* ===== SAVE HISTORY ===== */
+    alert("Thanh toán thành công");
+
     const history = loadJSON(BILL_HISTORY_KEY);
     history.push({
       billId: "BILL_" + Date.now().toString(36),
@@ -228,25 +258,17 @@
       customer: bill.customer,
       startTime: bill.startTime,
       endTime: Date.now(),
-      pricePerHour: bill.pricePerHour,
-      services: bill.services,
-      totalRoomFee: roomFee.total,
-      totalServiceFee: serviceTotal,
-      grandTotal: roomFee.total + serviceTotal,
+      discount: discountAmount,
+      grandTotal: grandTotalAmount,
       paymentMethod,
-      cashReceived: Number(cashReceivedInput.value || 0),
-      cashReturn:
-        Math.max(0, Number(cashReceivedInput.value) - (roomFee.total + serviceTotal)),
-      paidAt: Date.now(),
-      status: "paid"
+      services: bill.services,
+      paidAt: Date.now()
     });
     saveJSON(BILL_HISTORY_KEY, history);
 
-    /* ===== REMOVE PENDING ===== */
     bills.splice(billIndex, 1);
     saveJSON(BILL_KEY, bills);
 
-    /* ===== RELEASE ROOM ===== */
     const room = rooms.find(r => r.id === selectedRoomId);
     if (room) {
       room.status = "available";
@@ -257,7 +279,14 @@
 
     selectedRoomId = null;
     renderWaitingRooms();
-    alert("Thanh toán thành công. Bill đã được khóa.");
+  }
+
+  confirmPaymentBtn.onclick = () => {
+    if (paymentMethod === "transfer") {
+      showQRPopup(() => completePayment());
+      return;
+    }
+    completePayment();
   };
 
   /* ================== INIT ================== */

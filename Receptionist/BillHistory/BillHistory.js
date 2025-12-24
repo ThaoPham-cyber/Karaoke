@@ -1,118 +1,86 @@
-/* =========================================
-   BillHistory.js – POS History + Modal
-========================================= */
-
 (() => {
-  const STORAGE_KEY = "karaoke_bill_history_v1";
 
-  const tableBody = document.getElementById("billTableBody");
-  const searchInput = document.getElementById("searchInput");
-  const fromDate = document.getElementById("fromDate");
-  const toDate = document.getElementById("toDate");
+  const BILL_HISTORY_KEY = "karaoke_bill_history_v1";
+  const bodyEl = document.getElementById("billHistoryBody");
 
-  const modal = document.getElementById("billModal");
-  const modalContent = document.getElementById("modalContent");
+  const modal = document.getElementById("billDetailModal");
+  const closeBtn = modal.querySelector(".close");
 
-  let bills = [];
+  const mRoom = document.getElementById("mRoom");
+  const mCustomer = document.getElementById("mCustomer");
+  const mTime = document.getElementById("mTime");
+  const mPayment = document.getElementById("mPayment");
+  const mRoomFee = document.getElementById("mRoomFee");
+  const mServices = document.getElementById("mServices");
+  const mDiscount = document.getElementById("mDiscount");
+  const mTotal = document.getElementById("mTotal");
 
-  /* ========== LOAD ========= */
-  function load() {
-    try {
-      bills = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch {
-      bills = [];
+  const formatCurrency = v =>
+    Number(v || 0).toLocaleString("vi-VN") + "đ";
+
+  function loadHistory() {
+    return JSON.parse(localStorage.getItem(BILL_HISTORY_KEY)) || [];
+  }
+
+  function renderTable() {
+    const history = loadHistory();
+    bodyEl.innerHTML = "";
+
+    if (!history.length) {
+      bodyEl.innerHTML = `
+        <tr><td colspan="6">Chưa có hóa đơn nào</td></tr>`;
+      return;
     }
-  }
 
-  /* ========== UTIL ========= */
-  const money = v => Number(v).toLocaleString("vi-VN") + "đ";
-
-  /* ========== FILTER ========= */
-  function getFiltered() {
-    const kw = searchInput.value.toLowerCase();
-
-    return bills.filter(b => {
-      const text =
-        (b.roomName + b.customer?.name + b.customer?.phone).toLowerCase();
-
-      const paidDate = new Date(b.paidAt).toISOString().slice(0, 10);
-
-      return (
-        (!kw || text.includes(kw)) &&
-        (!fromDate.value || paidDate >= fromDate.value) &&
-        (!toDate.value || paidDate <= toDate.value)
-      );
-    });
-  }
-
-  /* ========== RENDER ========= */
-  function render() {
-    tableBody.innerHTML = "";
-
-    getFiltered().forEach((b, i) => {
+    history.reverse().forEach(bill => {
       const tr = document.createElement("tr");
+
       tr.innerHTML = `
-        <td>${i + 1}</td>
-        <td>${b.roomName}</td>
-        <td>${b.customer?.name || "Khách lẻ"}</td>
-        <td>${new Date(b.paidAt).toLocaleString("vi-VN")}</td>
-        <td class="total">${money(b.total)}</td>
-        <td class="method">${b.paymentMethod}</td>
+        <td>${new Date(bill.paidAt).toLocaleDateString("vi-VN")}</td>
+        <td>${bill.roomName}</td>
+        <td>${bill.customer?.name || "Khách lẻ"}</td>
         <td>
-          <button class="btn-view" onclick="viewBill('${b.id}')">
-            Xem
-          </button>
+          ${new Date(bill.startTime).toLocaleTimeString("vi-VN")} -
+          ${new Date(bill.endTime).toLocaleTimeString("vi-VN")}
+        </td>
+        <td>${bill.paymentMethod}</td>
+        <td>
+          <i class="fa-solid fa-eye view-btn"></i>
         </td>
       `;
-      tableBody.appendChild(tr);
+
+      tr.querySelector(".view-btn").onclick = () =>
+        openDetail(bill);
+
+      bodyEl.appendChild(tr);
     });
   }
 
-  /* ========== MODAL ========= */
-  window.viewBill = function (id) {
-    const b = bills.find(x => x.id === id);
-    if (!b) return;
+  function openDetail(bill) {
+    mRoom.textContent = bill.roomName;
+    mCustomer.textContent = bill.customer?.name || "Khách lẻ";
+    mPayment.textContent = bill.paymentMethod;
+    mDiscount.textContent = formatCurrency(bill.discount || 0);
+    mTotal.textContent = formatCurrency(bill.grandTotal);
 
-    modalContent.innerHTML = `
-      <div class="modal-row"><span>Phòng</span><strong>${b.roomName}</strong></div>
-      <div class="modal-row"><span>Khách</span><strong>${b.customer?.name || "Khách lẻ"}</strong></div>
-      <div class="modal-row"><span>SĐT</span><strong>${b.customer?.phone || "-"}</strong></div>
-      <div class="modal-row"><span>Thanh toán</span><strong>${b.paymentMethod}</strong></div>
-      <div class="modal-row"><span>Thời gian</span><strong>${new Date(b.paidAt).toLocaleString("vi-VN")}</strong></div>
+    mTime.textContent =
+      new Date(bill.startTime).toLocaleString("vi-VN") +
+      " → " +
+      new Date(bill.endTime).toLocaleString("vi-VN");
 
-      <div class="modal-section">
-        <h4>Dịch vụ</h4>
-        ${b.services.map(s => `
-          <div class="modal-item">
-            <span>${s.name} × ${s.qty}</span>
-            <strong>${money(s.price * s.qty)}</strong>
-          </div>
-        `).join("")}
-      </div>
+    mRoomFee.innerHTML =
+      formatCurrency(bill.totalRoomFee || 0);
 
-      <div class="modal-section">
-        <div class="modal-item">
-          <span>Tổng cộng</span>
-          <strong style="color:#e91e8f">${money(b.total)}</strong>
-        </div>
-      </div>
-    `;
+    mServices.innerHTML = bill.services.map(s => `
+      <div>${s.name} × ${s.qty} — ${formatCurrency(s.price * s.qty)}</div>
+    `).join("");
 
-    modal.style.display = "flex";
-  };
+    modal.classList.remove("hidden");
+  }
 
-  window.closeModal = () => modal.style.display = "none";
+  closeBtn.onclick = () => modal.classList.add("hidden");
+  modal.onclick = e => e.target === modal && modal.classList.add("hidden");
 
-  modal.onclick = e => {
-    if (e.target === modal) closeModal();
-  };
+  renderTable();
 
-  /* ========== EVENTS ========= */
-  searchInput.oninput = render;
-  fromDate.onchange = render;
-  toDate.onchange = render;
-
-  /* ========== INIT ========= */
-  load();
-  render();
 })();
