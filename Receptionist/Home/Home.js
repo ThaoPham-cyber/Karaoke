@@ -1,5 +1,4 @@
 (function () {
-
   /* ================= STORAGE KEYS ================= */
   const ROOM_KEY = "karaoke_rooms_v1";
   const BILL_KEY = "karaoke_bill_pending_v1";
@@ -30,66 +29,66 @@
   });
 
   /* ================= SYNC ORDER → BILL ================= */
+  /* Home.js - Cập nhật lại hàm markOrderServed */
+ 
   function markOrderServed(roomId) {
-   const rooms = load(ROOM_KEY);
-   const bills = load(BILL_KEY);
-   const services = load(SERVICE_KEY);
+  const rooms = load(ROOM_KEY);
+  let bills = load(BILL_KEY);
+  const services = load(SERVICE_KEY);
 
-   const roomIndex = rooms.findIndex(r => r.id === roomId);
-   if (roomIndex === -1) return;
+  const roomIndex = rooms.findIndex(r => r.id === roomId);
+  if (roomIndex === -1) return;
 
-   const room = rooms[roomIndex];
-   if (!room.orders || room.orders.length === 0) return;
+  const room = rooms[roomIndex];
+  if (!room.orders || room.orders.length === 0) return;
 
-   // ===== 1. LẤY / TẠO BILL =====
-   let bill = bills.find(b => b.roomId === roomId);
-
-    if (!bill) {
+  // 1. Tìm hoặc tạo Bill
+  let bill = bills.find(b => b.roomId === roomId);
+  if (!bill) {
     const customer = room.customers?.[0] || {};
-
     bill = {
       roomId: room.id,
       roomName: room.name,
-      startTime: room.checkIn || Date.now(),
-      pricePerHour: room.roomPrice || 100000,
+      startTime: room.startTime || Date.now(),
+      pricePerHour: room.price || 0,
       customer: {
         name: customer.name || "Khách lẻ",
         phone: customer.phone || ""
       },
       services: []
     };
-
     bills.push(bill);
   }
 
-  // ===== 2. GỘP DỊCH VỤ =====
-  room.orders.forEach(o => {
-    const svc = services.find(s => s.id === o.svcId);
-    if (!svc) return;
+  // 2. Chuyển món từ orders vào bill.services
+  room.orders.forEach(orderItem => {
+    const svcInfo = services.find(s => s.id === orderItem.svcId);
+    if (!svcInfo) return;
 
-    const existed = bill.services.find(s => s.svcId === o.svcId);
-    if (existed) {
-      existed.qty += o.qty;
+    const existedInBill = bill.services.find(s => s.svcId === orderItem.svcId);
+    if (existedInBill) {
+      existedInBill.qty += orderItem.qty;
     } else {
       bill.services.push({
-        svcId: svc.id,
-        name: svc.name,
-        price: svc.price,
-        qty: o.qty
+        svcId: svcInfo.id,
+        name: svcInfo.name,
+        price: svcInfo.price,
+        qty: orderItem.qty
       });
     }
   });
 
-  // ===== 3. CLEAR ĐƠN =====
-  rooms[roomIndex].orders = [];
-  rooms[roomIndex].hasNewOrder = false;
-
+  // 3. XÓA ĐƠN HÀNG TRONG PHÒNG (Để món của phòng khác đẩy lên)
+  rooms[roomIndex].orders = []; 
+  
+  // 4. Lưu lại toàn bộ
   save(ROOM_KEY, rooms);
   save(BILL_KEY, bills);
 
-  render(); // 🔥 UI BIẾN MẤT NGAY
+  // 5. Cập nhật giao diện ngay lập tức
+  render(); 
+  // alert(`Đã phục vụ xong cho ${room.name}`); // Bạn có thể tắt alert nếu muốn mượt hơn
   }
-
 
   /* ================= RENDER ================= */
   function render() {
@@ -117,12 +116,11 @@
         <div>KH: ${cust.name || "-"}</div>
         <div class="time">⏱ Bắt đầu: ${cust.start || "--:--"}</div>
       `;
-
       activeRoomList.appendChild(el);
     });
 
     /* ===== ĐƠN CHỜ PHỤC VỤ ===== */
-    const orderRooms = rooms.filter(r => r.orders && r.orders.length);
+    const orderRooms = rooms.filter(r => Array.isArray(r.orders) && r.orders.length);
     orderCount.textContent = `${orderRooms.length} đơn`;
     orderList.innerHTML = "";
 
@@ -147,19 +145,31 @@
           }).join("<br>")}
         </div>
 
-        <button class="btn-done">✔ Đã phục vụ</button>
+        <button class="btn-done" data-room-id="${r.id}">
+          ✔ Đã phục vụ
+        </button>
       `;
-
-      el.querySelector(".btn-done").onclick = () => {
-        if (confirm(`Xác nhận ${r.name} đã phục vụ xong?`)) {
-          markOrderServed(r.id);
-        }
-      };
 
       orderList.appendChild(el);
     });
   }
+  orderList.addEventListener("click", function (e) {
+  const btn = e.target.closest(".btn-done");
+  if (!btn) return;
 
+  const roomId = btn.dataset.roomId;
+  if (!roomId) return;
+
+  // Tìm phòng trong dữ liệu thực tế
+  const rooms = load(ROOM_KEY);
+  const room = rooms.find(r => r.id === roomId);
+  
+  if (room) {
+    // Xác nhận và xử lý
+    if (confirm(`Xác nhận ${room.name} đã phục vụ xong?`)) {
+      markOrderServed(roomId); // Hàm này đã có lệnh render() ở cuối
+    }
+  }
+});
   render();
-
 })();

@@ -222,18 +222,40 @@
 
   /* ================== QR ================== */
   function showQRPopup(onConfirm) {
-    const html = `
-      <div class="qr-overlay">
-        <div class="qr-box">
-          <h3>Quét mã QR để thanh toán</h3>
-          <img src="images/QR.png" style="width:220px">
-          <button id="confirmQR">Xác nhận đã thanh toán</button>
+    // Tạo phần tử overlay
+    const overlay = document.createElement("div");
+    overlay.className = "qr-overlay";
+    
+    // Nội dung bên trong box
+    overlay.innerHTML = `
+      <div class="qr-box">
+        <h3>Quét mã để chuyển khoản</h3>
+        <div style="background: #f8f9fa; padding: 10px; border-radius: 12px; margin-bottom: 15px;">
+            <img src="../images/QR.png" alt="Mã thanh toán QR">
         </div>
+        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+            Vui lòng kiểm tra kỹ số tiền trước khi xác nhận.
+        </p>
+        <button id="confirmQR">Xác nhận đã nhận tiền</button>
+        <button id="cancelQR" style="background:none; border:none; color:#999; margin-top:12px; cursor:pointer; font-size:13px;">Đóng</button>
       </div>`;
-    document.body.insertAdjacentHTML("beforeend", html);
+
+    document.body.appendChild(overlay);
+
+    // Xử lý nút Xác nhận
     document.getElementById("confirmQR").onclick = () => {
-      document.querySelector(".qr-overlay").remove();
-      onConfirm();
+      overlay.remove();
+      onConfirm(); // Gọi hàm hoàn tất thanh toán
+    };
+
+    // Xử lý nút Đóng/Hủy
+    document.getElementById("cancelQR").onclick = () => {
+      overlay.remove();
+    };
+
+    // Đóng khi nhấn ra ngoài vùng trắng (overlay)
+    overlay.onclick = (e) => {
+      if (e.target === overlay) overlay.remove();
     };
   }
 

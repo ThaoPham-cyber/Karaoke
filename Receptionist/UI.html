@@ -83,6 +83,8 @@
 
       const folderPath = folder || page;
       const pagePath = `${folderPath}/${page}.html`;
+      
+      
 
       if (currentCssLink) currentCssLink.remove();
       if (currentJsScript) currentJsScript.remove();
@@ -105,10 +107,25 @@
         const jsScript = document.createElement("script");
         jsScript.src = jsPath;
         jsScript.onload = () => {
-          if (window.initRoomPage && page === 'RoomBooking') {
-            window.initRoomPage();
-          }
-        };
+        switch (page) {
+         case "Home":
+         window.initHome && window.initHome();
+         break;
+
+          case "RoomBooking":
+          window.initRoomPage && window.initRoomPage();
+          break;
+
+            case "Bill":
+            window.initBill && window.initBill();
+          break;
+
+         case "BillHistory":
+         window.initBillHistory && window.initBillHistory();
+         break;
+       }
+       };
+
         document.body.appendChild(jsScript);
         currentJsScript = jsScript;
 

@@ -133,9 +133,7 @@
                             <i class="fa-solid fa-phone"></i> ${cust.phone || "-"}
                         </div>
                     </div>
-                    <button class="add-btn" onclick="alert('Thêm món cho ${room.name}')">
-                        <i class="fa-solid fa-plus"></i> Thêm món
-                    </button>
+                    
                 </div>
 
                 <div class="room-info">

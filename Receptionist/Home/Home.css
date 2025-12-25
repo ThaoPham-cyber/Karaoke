@@ -108,15 +108,44 @@ body{
 .badge.red{background:#fee2e2;color:#b91c1c}
 
 .time{color:#6b7280;font-size:13px}
+/* Home.css - Thay thế đoạn lỗi cũ */
+/* Home.css - THAY THẾ TOÀN BỘ ĐOẠN CUỐI FILE */
 
-.btn-done{
-  margin-top:10px;
-  width:100%;
-  background:#22c55e;
-  color:#fff;
-  border:none;
-  padding:10px;
-  border-radius:10px;
-  font-weight:600;
-  cursor:pointer;
+.item {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+    position: relative;
+    /* Đảm bảo không có gì ngăn cản click vào thẻ con */
+    pointer-events: auto !important; 
 }
+
+.btn-done {
+    margin-top: 10px;
+    width: 100%;
+    background: #22c55e;
+    color: #fff;
+    border: none;
+    padding: 12px; /* Tăng diện tích bấm */
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    /* Ép nút luôn nổi lên trên cùng và nhận sự kiện */
+    position: relative;
+    z-index: 99;
+    pointer-events: auto !important;
+}
+
+.btn-done:hover {
+    background: #19a34a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+}
+
+.btn-done:active {
+    transform: translateY(0);
+}
+

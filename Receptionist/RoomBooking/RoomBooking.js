@@ -326,6 +326,7 @@
         if(!room) return;
         usageModal.classList.remove('hidden');
         usageTitle.textContent = `Sử dụng - ${room.name}`;
+        checkoutBtn.dataset.roomId = room.id;
         // top summary
         const firstCust = (room.customers && room.customers[0]) || {};
         usageTop.innerHTML = `<div class="left"><strong>${escapeHtml(firstCust.name||'')}</strong><div style="color:#6b7280">${escapeHtml(firstCust.phone||'')}</div></div>
@@ -451,28 +452,40 @@
       }
 
       // checkout (simple)
-      checkoutBtn.addEventListener('click', (ev)=>{
-        ev.preventDefault();
-        if(!activeRoomId) return;
-        const room = rooms.find(r=>r.id===activeRoomId);
-        if(!room) return;
-        if(!confirm('Xác nhận thanh toán và trả phòng?')) return;
-        // clear customers and orders, set status to available
-        // xóa bill pending tương ứng
-let bills = JSON.parse(localStorage.getItem(BILL_PENDING_KEY)) || [];
-bills = bills.filter(b => b.roomId !== room.id);
-localStorage.setItem(BILL_PENDING_KEY, JSON.stringify(bills));
+      // Thay thế đoạn checkoutBtn.addEventListener cũ
+checkoutBtn.addEventListener('click', function (ev) {
+  ev.preventDefault();
+  const roomId = this.dataset.roomId;
+  const room = rooms.find(r => r.id === roomId);
+  if (!room) return;
 
-room.customers = [];
-room.orders = [];
-room.status = 'available';
+  // 1. Cập nhật dữ liệu vào danh sách hóa đơn chờ (Bill Pending)
+  let bills = JSON.parse(localStorage.getItem(BILL_PENDING_KEY)) || [];
+  let billIndex = bills.findIndex(b => b.roomId === room.id);
 
-save();
+  if (billIndex !== -1) {
+    // Cập nhật dịch vụ mới nhất từ phòng vào hóa đơn
+    bills[billIndex].services = room.orders.map(o => {
+      const svc = services.find(s => s.id === o.svcId) || { name: '(Đã xóa)', price: 0 };
+      return {
+        svcId: o.svcId,
+        name: svc.name,
+        price: svc.price,
+        qty: o.qty
+      };
+    });
+    localStorage.setItem(BILL_PENDING_KEY, JSON.stringify(bills));
+  }
 
-        closeUsageModalFn();
-        renderRooms();
-        renderSummary();
-      });
+  // 2. Lưu trạng thái phòng hiện tại
+  save(); 
+  
+  // 3. Thông báo và đóng modal
+  alert('Đã lưu thay đổi dịch vụ vào hóa đơn!');
+  closeUsageModalFn();
+  renderRooms();
+});
+
 
       closeUsageModal.addEventListener('click', closeUsageModalFn);
       closeUsageDone.addEventListener('click', closeUsageModalFn);

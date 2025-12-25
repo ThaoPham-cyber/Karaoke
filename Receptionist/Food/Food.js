@@ -233,7 +233,7 @@
           </div>
         </div>
         <div style="width:90px;text-align:right">${formatCurrency(svc.price * row.qty)}</div>
-        <div style="width:40px;text-align:right"><button data-act="rem" data-id="${row.id}" style="background:transparent;border:none;color:#e11">${"🗑"}</button></div>
+        <div style="width:40px;text-align:right"><button data-act="rem" data-id="${row.id}" style="background:transparent;border:none;color:#e11"><i class="fa-solid fa-trash"></i></button></div>
       `;
       line.innerHTML = lineHtml;
       cartBody.appendChild(line);
@@ -262,40 +262,57 @@
   // clear cart
   function clearCart() {
     if (!selectedRoomId) return;
-    if (!confirm("Xóa toàn bộ giỏ hàng của phòng này?")) return;
-    
-     renderCart(); updateCartCount();
+    if (!carts[selectedRoomId] || carts[selectedRoomId].length === 0) return;
+    if (!confirm("Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng của phòng này?")) return;
+    carts[selectedRoomId] = [];
+    saveCarts(); 
+    renderCart(); 
+    updateCartCount();
+    showToast("Đã xóa sạch giỏ hàng");
   }
 
   function checkout() {
-  if (!selectedRoomId) return;
-  const cart = getCartForRoom(selectedRoomId);
-  if (!cart.length) { alert("Giỏ trống."); return; }
-  if (!confirm("Gửi món cho phòng này?")) return;
-  const rooms = JSON.parse(localStorage.getItem(ROOM_KEY)) || [];
-  const room = rooms.find(r => r.id === selectedRoomId);
-  if (!room) return;
-
-  if (!room.orders) room.orders = [];
-  cart.forEach(item => {
-    const svc = services.find(s => s.id === item.id);
-    if (!svc) return;
-    room.orders.push({
-      id: svc.id,
-      name: svc.name,
-      price: svc.price,
-      qty: item.qty
+    if (!selectedRoomId) return;
+    const cart = getCartForRoom(selectedRoomId);
+    if (!cart.length) { 
+      alert("Giỏ hàng đang trống, vui lòng chọn món."); 
+      return; 
+    }
+    if (!confirm("Xác nhận gửi đơn hàng này đến bộ phận phục vụ?")) return;
+    const allRooms = JSON.parse(localStorage.getItem(ROOM_KEY)) || [];
+    const roomIdx = allRooms.findIndex(r => r.id === selectedRoomId);
+    
+    if (roomIdx === -1) {
+      alert("Không tìm thấy dữ liệu phòng!");
+      return;
+    }
+    if (!allRooms[roomIdx].orders) allRooms[roomIdx].orders = [];
+    cart.forEach(item => {
+      const svc = services.find(s => s.id === item.id);
+      if (!svc) return;
+      const existingOrder = allRooms[roomIdx].orders.find(o => o.svcId === item.id);
+      if (existingOrder) {
+        existingOrder.qty += item.qty;
+      } else {
+        allRooms[roomIdx].orders.push({
+          svcId: svc.id,  
+          name: svc.name,
+          price: svc.price,
+          qty: item.qty
+        });
+      }
     });
-  });
-  room.hasNewOrder = true;
-  localStorage.setItem(ROOM_KEY, JSON.stringify(rooms));
-  carts[selectedRoomId] = [];
-  saveCarts();
-  renderCart();
-  updateCartCount();
-  closeCartModal();
-  showToast("Đã gửi món cho phòng", 1600);
-}
+    allRooms[roomIdx].hasNewOrder = true;
+    localStorage.setItem(ROOM_KEY, JSON.stringify(allRooms));
+    carts[selectedRoomId] = [];
+    saveCarts();
+    renderCart();
+    updateCartCount();
+    closeCartModal();
+    showToast("Gửi đơn thành công!", 2000);
+    loadRooms(); 
+    renderRooms();
+  }
 
 
   // small toast
